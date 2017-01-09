@@ -22,5 +22,9 @@ The first part of the application will be the login part using facebook. Followi
 - Yelp API (optional)
 
 ## Technical Problems and how to overcome them
+Technical problems which may arise are with using the various API's and the location of the user. I believe that Firebase API should not pose a large problem, seeing as I have worked with it before. The Google API which has to be used to get the location is something that has been done many times before, so I do not believe that this will pose to be a problem either. However, to get the Facebook friends of the user we need to use the Facebook API and this may pose a problem. If I do not get to solve this problem, an option could be for the user to create an account for this application and add friends using their e-mail adresses. 
 
-a review of similar applications or visualizations in terms of features and technical aspects (what do they offer? how have they implemented it?)
+## Similar Applications
+- Trip Advisor
+- Restocheck
+
