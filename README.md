@@ -1,14 +1,14 @@
 # End Project Minor
 
 ## Problem
-When going out and one wishes to go out for diner, it is often a tough choonsing a restaurant. Even when you look up a specific restaurant, the ratings given will most likely be given by people you do not know or gave an anonymous rating. However, when someone you know recommends a specific restaurant, you are more likely to be convinced by their opinion and make a quick decision on where to eat. Therefore, I would like to create an app which uses your geo location to see which (and what kind of) restaurants are near, and by logging in with facebook sees if any of your facebook friends have been there and left a positive review or are even checked in at that moment. 
+When going out and one wishes to go out for diner, it is often tough choosing a restaurant. Even when you look up a specific restaurant, the ratings given will most likely be given by people you do not know or gave an anonymous rating. However, when someone you know recommends a specific restaurant, you are more likely to be convinced by their opinion and make a quick decision on where to eat. Therefore, I would like to create an app which uses your geo location to see which (and what kind of) restaurants are near, and by logging in with facebook sees if any of your facebook friends have been there and left a positive review or are even checked in at that moment. 
 
 ## Features
 To solve this problem, there are a couple of features which are essential for this problem to be solved. First of all, the user needs to be able to log in using facebook. Secondly, the user needs to see what restaurants and their ratings are near and see if any of their friends are checked in. Thirdly, the user needs to be able to check in and out when in a restaurant and give a rating after they have checked out.
 
 ## Visual Sketch
-<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Login%20Activity2.png" width=50%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Friends%20Activity.png" width=50%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Read%20Review%20Activity.png" width=50%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Restaurant%20Near%20User%20Activity.png" width=50%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Selected%20Restaurant%20Activity.png" width=50%><img
-src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Review%20Activity.png" width=50%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Your%20Reviews%20Activity.png" width=50%>
+<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Login%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Friends%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Read%20Review%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Restaurant%20Near%20User%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Selected%20Restaurant%20Activity.png" width=33%><img
+src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Review%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Your%20Reviews%20Activity.png" width=33%>
 
 
 ## Data sets and sources
