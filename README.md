@@ -1,6 +1,7 @@
 # End Project Minor
+### Tom Verburg 10769633
 
-## Problem
+## Problem and Application goals
 When going out and one wishes to go out for diner, it is often tough choosing a restaurant. Even when you look up a specific restaurant, the ratings given will most likely be given by people you do not know or gave an anonymous rating. However, when someone you know recommends a specific restaurant, you are more likely to be convinced by their opinion and make a quick decision on where to eat. Therefore, I would like to create an app which uses your geo location to see which (and what kind of) restaurants are near, and by logging in with facebook sees if any of your facebook friends have been there and left a positive review or are even checked in at that moment. 
 
 ## Features
