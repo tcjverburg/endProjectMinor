@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1006867257102",
+    "firebase_url": "https://friends-and-food.firebaseio.com",
+    "project_id": "friends-and-food",
+    "storage_bucket": "friends-and-food.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006867257102:android:cd5c6a120086b529",
+        "android_client_info": {
+          "package_name": "nl.mprog.friendsandfood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006867257102-d06t1kki6l3qk6q7l6iltpcph8cj4bv0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nl.mprog.friendsandfood",
+            "certificate_hash": "1499053C3EC9345299235953EEAE4A53778FDFA9"
+          }
+        },
+        {
+          "client_id": "1006867257102-hkq5t5hifk56g4rnf2hpfei5fvqdqg7b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8L8Yx5bFUz48YrQLLTXz4K5mdyNAr-m0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006867257102-hkq5t5hifk56g4rnf2hpfei5fvqdqg7b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
