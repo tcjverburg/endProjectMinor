@@ -14,6 +14,9 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -24,6 +27,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * LoginActivity.java
@@ -52,6 +58,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private CallbackManager mCallbackManager;
 
+    private String rawdata;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +84,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    //Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
+                    //intent.putExtra("jsondata", rawdata);
+                    //startActivity(intent);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -91,13 +102,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.setReadPermissions("email", "public_profile", "user_friends");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                findViewById(R.id.login_button).setVisibility(View.GONE);
-                Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                handleFacebookAccessToken(loginResult.getAccessToken());
+            public void onSuccess(LoginResult login_result) {
+                Log.d(TAG, "facebook:onSuccess:" + login_result);
+                handleFacebookAccessToken(login_result.getAccessToken());
+                new GraphRequest(
+                        AccessToken.getCurrentAccessToken(),
+                        "/me/friends",
+                        null,
+                        HttpMethod.GET,
+                        new GraphRequest.Callback() {
+                            public void onCompleted(GraphResponse response) {
+                                try {
+                                    JSONArray rawName = response.getJSONObject().getJSONArray("data");
+                                    rawdata = rawName.toString();
+                                    Toast.makeText(LoginActivity.this, rawdata,
+                                            Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                ).executeAsync();
+
             }
 
             @Override
@@ -205,4 +235,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             signOut();
         }
     }
+
+
 }
