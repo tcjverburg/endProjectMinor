@@ -28,13 +28,22 @@ src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Revie
 ##Firebase Structure
 
 - Users
-  - Name
   - User ID
+    - Name User
+    - Profile Picture (?)
+    - Review 
+      - Name Restaurant
+      - Rating
+      - Text
   
 - Restaurants
   - Restaurant ID
-  - Name
-  - Type Restaurant
+    - Name Restaurant
+    - Type Restaurant
+    - Review 
+      - User ID
+      - Rating
+      - Text
   
 - Reviews
    - Restaurant ID
