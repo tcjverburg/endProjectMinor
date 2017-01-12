@@ -35,7 +35,9 @@ src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Revie
   - Restaurant ID
   - Name
   - Type Restaurant
-  - Reviews
-    - User ID
-    - Rating 
-    - Text
+  
+- Reviews
+   - Restaurant ID
+   - User ID
+   - Rating 
+   - Text
