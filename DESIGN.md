@@ -33,8 +33,7 @@ src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Revie
     - Profile Picture (?)
     - Friends
       - Friend ID
-    - Review 
-      - Review ID
+     - Review ID
         - Restaurant ID
         - Rating
         - Text
@@ -43,8 +42,7 @@ src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Revie
   - Restaurant ID
     - Name Restaurant
     - Type Restaurant (?)
-    - Review 
-      - Review ID
+     - Review ID
         - User ID
         - Rating
         - Text
