@@ -13,5 +13,5 @@ Today I tried going through several tutorials and seeing how you implement loggi
 now, I am able to log in using facebook but I am still having trouble with getting the friends list.. It seems as if Facebook only allows
 the names of friends who also use the application so my plan is to make a new facebook account to test this.
 
-##Thursday
+##Thursday 12-01
 For today, I had the goal to finish my technical design, finish the prototype and start with the Firebase database. All of this has been accomplished but I am only now starting the realise the scope of the app I want to make, especially since I haven't even looked at the Google Maps API.
