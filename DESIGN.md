@@ -32,21 +32,19 @@ src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Revie
     - Name User
     - Profile Picture (?)
     - Review 
-      - Name Restaurant
-      - Rating
-      - Text
+      - Review ID
+        - Restaurant ID
+        - Rating
+        - Text
   
 - Restaurants
   - Restaurant ID
     - Name Restaurant
     - Type Restaurant
     - Review 
-      - User ID
-      - Rating
-      - Text
+      - Review ID
+        - User ID
+        - Rating
+        - Text
   
-- Reviews
-   - Restaurant ID
-   - User ID
-   - Rating 
-   - Text
+
