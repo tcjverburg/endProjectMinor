@@ -31,6 +31,8 @@ src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Revie
   - User ID
     - Name User
     - Profile Picture (?)
+    - Friends
+      - Friend ID
     - Review 
       - Review ID
         - Restaurant ID
