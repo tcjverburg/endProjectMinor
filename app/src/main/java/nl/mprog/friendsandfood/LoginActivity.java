@@ -40,7 +40,7 @@ import org.json.JSONException;
  * source:https://github.com/firebase/quickstart-android/blob/master/auth/app/src/main/java/com/google/firebase/quickstart/auth/EmailPasswordActivity.java
  */
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity {
 
 
     private static final String TAG = "FacebookLogin";
@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Views
         mStatusTextView = (TextView) findViewById(R.id.status);
         mDetailTextView = (TextView) findViewById(R.id.detail);
-        findViewById(R.id.log_out_button).setOnClickListener(this);
+        //findViewById(R.id.log_out_button).setOnClickListener(this);
 
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -84,9 +84,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    //Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
-                    //intent.putExtra("jsondata", rawdata);
-                    //startActivity(intent);
+                    if (rawdata != null) {
+                        Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
+                        intent.putExtra("jsondata", rawdata);
+                        intent.putExtra("uid", user.getUid());
+                        startActivity(intent);
+                    }
+                    else {
+                        signOut();
+                    }
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -217,24 +223,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mStatusTextView.setText(getString(R.string.facebook_status_fmt, user.getDisplayName()));
             mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
 
-            findViewById(R.id.login_button).setVisibility(View.GONE);
-            findViewById(R.id.log_out_button).setVisibility(View.VISIBLE);
+            //findViewById(R.id.login_button).setVisibility(View.GONE);
+            //findViewById(R.id.log_out_button).setVisibility(View.VISIBLE);
         } else {
-            mStatusTextView.setText(R.string.signed_out);
+            mStatusTextView.setText(null);
             mDetailTextView.setText(null);
-
+            findViewById(R.id.login_button).setVisibility(View.INVISIBLE);
             findViewById(R.id.login_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.log_out_button).setVisibility(View.GONE);
+            //findViewById(R.id.login_button).setVisibility(View.VISIBLE);
+            //findViewById(R.id.log_out_button).setVisibility(View.GONE);
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.log_out_button) {
-            signOut();
-        }
-    }
+
 
 
 }
