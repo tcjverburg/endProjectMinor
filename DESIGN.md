@@ -48,5 +48,7 @@ src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Revie
         - User ID
         - Rating
         - Text
+    - Checked In
+      - User ID
   
 
