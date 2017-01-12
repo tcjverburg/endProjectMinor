@@ -26,3 +26,16 @@ src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Revie
 - Facebook API
 
 ##Firebase Structure
+
+- Users
+  - Name
+  - User ID
+  
+- Restaurants
+  - Restaurant ID
+  - Name
+  - Type Restaurant
+  - Reviews
+    - User ID
+    - Rating 
+    - Text
