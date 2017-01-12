@@ -23,6 +23,21 @@
         <activity android:name=".FriendsListActivity"
             android:label="List with friends"
             />
+        <activity android:name=".NearRestaurantActivity"
+            android:label="Restaurants near user"
+            />
+        <activity android:name=".ReadReviewActivity"
+            android:label="Read reviews"
+            />
+        <activity android:name=".SelectedRestaurantActivity"
+            android:label="Information about selected restaurant"
+            />
+        <activity android:name=".WriteReviewActivity"
+            android:label="Write a review about a restaurant you have been."
+            />
+        <activity android:name=".YourReviewsActivity"
+            android:label="List of your own reviews"
+            />
     </application>
 
 </manifest>

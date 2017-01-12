@@ -214,7 +214,6 @@ public class LoginActivity extends AppCompatActivity {
     public void signOut() {
         mAuth.signOut();
         LoginManager.getInstance().logOut();
-
         updateUI(null);
     }
 

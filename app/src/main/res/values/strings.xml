@@ -9,4 +9,8 @@
     <string name="signed_out">Signed Out</string>
     <string name="firebase_status_fmt">Firebase User: %s</string>
     <string name="facebook_status_fmt">Facebook User: %s</string>
+    <string name="friends">FRIENDS</string>
+    <string name="restaurants">RESTAURANTS</string>
+    <string name="own_reviews">OWN REVIEWS</string>
+    <string name="submit_review">Submit Review</string>
 </resources>
