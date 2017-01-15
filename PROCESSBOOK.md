@@ -15,3 +15,10 @@ the names of friends who also use the application so my plan is to make a new fa
 
 ##Thursday 12-01
 For today, I had the goal to finish my technical design, finish the prototype and start with the Firebase database. All of this has been accomplished but I am only now starting the realise the scope of the app I want to make, especially since I haven't even looked at the Google Maps API.
+
+##Friday 13-01
+This morning we had the presentations of our prototype. Based on feedback, I will continue with the design I have so far, except for the incheck option. According to the observers, this feature will probably cost me too much time.
+
+##Weekend 14-01 and 15-01
+In the weekend I made connection to the Google Places API and the Google Maps API and implemented them into my application. Still needs a lot of work concerning the query but the start has been made. 
+
