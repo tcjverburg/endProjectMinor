@@ -46,7 +46,7 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
             }
         });
     }
-    
+
     @Override
     public void onClick(View v) {
         //On click method for the navigation bar and other buttons.
