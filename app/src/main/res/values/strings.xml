@@ -13,4 +13,5 @@
     <string name="restaurants">RESTAURANTS</string>
     <string name="own_reviews">OWN REVIEWS</string>
     <string name="submit_review">Submit Review</string>
+    <string name="submit">Submit</string>
 </resources>

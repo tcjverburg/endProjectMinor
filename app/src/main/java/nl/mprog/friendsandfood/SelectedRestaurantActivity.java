@@ -22,13 +22,17 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_restaurant);
+
+
         Intent intent = getIntent();
-        String restaurant = intent.getStringExtra("restaurant");
+        String restaurantName = intent.getStringExtra("restaurantName");
+        String restaurantInfo = intent.getStringExtra("restaurantInfo");
         ArrayList<String> friends = new ArrayList<String>();
-        friends.add("John");
+
         TextView name = (TextView) findViewById(R.id.selected_restaurant_name);
         findViewById(R.id.submit).setOnClickListener(this);
-        name.setText(restaurant);
+
+        name.setText(restaurantName);
         listView = (ListView) findViewById(R.id.listViewReviewFriends);
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, friends); // simple text view for list item
         listView.setAdapter(adapter);

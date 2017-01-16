@@ -124,9 +124,6 @@ public class LoginActivity extends AppCompatActivity {
                                 try {
                                     JSONArray rawName = response.getJSONObject().getJSONArray("data");
                                     rawdata = rawName.toString();
-                                    Toast.makeText(LoginActivity.this, rawdata,
-                                            Toast.LENGTH_SHORT).show();
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

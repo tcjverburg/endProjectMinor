@@ -2,6 +2,7 @@ package nl.mprog.friendsandfood;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -11,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,10 +23,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,19 +38,40 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static nl.mprog.friendsandfood.AppConfig.GEOMETRY;
+import static nl.mprog.friendsandfood.AppConfig.ICON;
+import static nl.mprog.friendsandfood.AppConfig.LATITUDE;
+import static nl.mprog.friendsandfood.AppConfig.LOCATION;
+import static nl.mprog.friendsandfood.AppConfig.LONGITUDE;
+import static nl.mprog.friendsandfood.AppConfig.NAME;
+import static nl.mprog.friendsandfood.AppConfig.OK;
+import static nl.mprog.friendsandfood.AppConfig.PLACE_ID;
+import static nl.mprog.friendsandfood.AppConfig.REFERENCE;
+import static nl.mprog.friendsandfood.AppConfig.STATUS;
+import static nl.mprog.friendsandfood.AppConfig.SUPERMARKET_ID;
+import static nl.mprog.friendsandfood.AppConfig.TAG;
+import static nl.mprog.friendsandfood.AppConfig.VICINITY;
+import static nl.mprog.friendsandfood.AppConfig.ZERO_RESULTS;
 
 // Source:https://www.androidtutorialpoint.com/intermediate/android-map-app-showing-current-location-android/
 
 public class NearRestaurantActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        GoogleMap.OnMarkerClickListener{
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
+    Map<String, ArrayList> restaurantMap = new HashMap<>();
+    ArrayList<String> restaurantInfo = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +84,12 @@ public class NearRestaurantActivity extends FragmentActivity implements OnMapRea
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getView().setVisibility(View.INVISIBLE);
+        //mapFragment.getView().setVisibility(View.INVISIBLE);
         mapFragment.getMapAsync(this);
-        new JSONTask().execute("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=restaurant&keyword=cruise&key=AIzaSyDMXpcFcn3qN59rHEKWLdA2_dA6FeVEnTU");
+
+
+
+
 
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=33.8670522,151.1957362&radius=500&type=restaurant&key=AIzaSyCsHjs_jwTfSMNO_JlKz_Yr1T1AcqfWFdA
     }
@@ -135,16 +162,12 @@ public class NearRestaurantActivity extends FragmentActivity implements OnMapRea
 
         //Place current location marker
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
+        new JSONTask().execute("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ location.getLatitude() + "," + location.getLongitude()+ "&radius=1000&type=restaurant&key=AIzaSyDMXpcFcn3qN59rHEKWLdA2_dA6FeVEnTU");
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -276,11 +299,79 @@ public class NearRestaurantActivity extends FragmentActivity implements OnMapRea
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
-            Log.d("HTTP Error", result);
-
-
-
+            try {
+                JSONObject json = new JSONObject(result);
+                parseLocationResult(json);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            //Log.d("HTTP Error", result);
         }
+    }
+    private void parseLocationResult(JSONObject result) {
+
+        String id, place_id, placeName = null, reference, icon, vicinity = null;
+        double latitude, longitude;
+
+        try {
+            JSONArray jsonArray = result.getJSONArray("results");
+            if (result.getString(STATUS).equalsIgnoreCase(OK)) {
+
+                mMap.clear();
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject place = jsonArray.getJSONObject(i);
+
+                    id = place.getString(SUPERMARKET_ID);
+                    place_id = place.getString(PLACE_ID);
+                    if (!place.isNull(NAME)) {
+                        placeName = place.getString(NAME);
+                    }
+                    if (!place.isNull(VICINITY)) {
+                        vicinity = place.getString(VICINITY);
+                    }
+                    latitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
+                            .getDouble(LATITUDE);
+                    longitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
+                            .getDouble(LONGITUDE);
+                    reference = place.getString(REFERENCE);
+                    icon = place.getString(ICON);
+                    restaurantInfo.add(place_id + "," + latitude + "," + longitude);
+                    restaurantMap.put(placeName, restaurantInfo);
+
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    LatLng latLng = new LatLng(latitude, longitude);
+                    markerOptions.position(latLng);
+                    markerOptions.title(placeName);
+                    mMap.addMarker(markerOptions);
+                    mMap.setOnMarkerClickListener(this);
+                }
+
+                Toast.makeText(getBaseContext(), jsonArray.length() + " Restaurants found!",
+                        Toast.LENGTH_LONG).show();
+
+            } else if (result.getString(STATUS).equalsIgnoreCase(ZERO_RESULTS)) {
+                Toast.makeText(getBaseContext(), "No Restaurants found in 1KM radius!!!",
+                        Toast.LENGTH_LONG).show();
+            }
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+            Log.e(TAG, "parseLocationResult: Error=" + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Log.i("GoogleMapActivity", "onMarkerClick");
+        Toast.makeText(getApplicationContext(),
+                "Marker Clicked: " + marker.getSnippet(), Toast.LENGTH_LONG)
+                .show();
+        Intent intent = new Intent(NearRestaurantActivity.this,SelectedRestaurantActivity.class);
+        intent.putExtra("restaurantName", marker.getTitle());
+        intent.putExtra("restaurantInfo", restaurantMap.get(marker.getTitle()));
+        startActivity(intent);
+        return false;
+    }
 }
