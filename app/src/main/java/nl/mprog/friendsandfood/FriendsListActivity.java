@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.facebook.Profile;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -41,11 +43,12 @@ public class FriendsListActivity extends AppCompatActivity implements View.OnCli
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
         findViewById(R.id.restaurants_nav).setOnClickListener(this);
 
+        String profile = Profile.getCurrentProfile().getId();
 
         //Firebase database, database reference and authentication.
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         assert userUid != null;
-        myRefFriends = database.getReference("users").child(userUid).child("friends");
+        myRefFriends = database.getReference("users").child(profile).child("friends");
 
 // Dit bij login doen, dan hier weer uitlezen uit Firebase met datasnapshot
         try {

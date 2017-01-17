@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                                 try {
                                     JSONArray rawName = response.getJSONObject().getJSONArray("data");
                                     rawdata = rawName.toString();
+                                    Log.d("RAWDATA", rawdata);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

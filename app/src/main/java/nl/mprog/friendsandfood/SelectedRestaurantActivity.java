@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 public class SelectedRestaurantActivity extends AppCompatActivity implements View.OnClickListener{
     ListView listView;
+    String restaurantID;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +27,8 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
 
         Intent intent = getIntent();
         String restaurantName = intent.getStringExtra("restaurantName");
-        String restaurantInfo = intent.getStringExtra("restaurantInfo");
+        restaurantID = intent.getStringExtra("restaurantID");
+
         ArrayList<String> friends = new ArrayList<String>();
 
         TextView name = (TextView) findViewById(R.id.selected_restaurant_name);
@@ -56,9 +58,10 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
         //On click method for the navigation bar and other buttons.
         int i = v.getId();
         if (i == R.id.submit) {
-            Intent getNameScreen = new Intent(getApplicationContext(), WriteReviewActivity.class);
-            startActivity(getNameScreen);
-            finish();
+            Intent intent = new Intent(SelectedRestaurantActivity.this,WriteReviewActivity.class);
+            intent.putExtra("restaurantID", restaurantID);
+            startActivity(intent);
+            //finish();
         }
     }
 }

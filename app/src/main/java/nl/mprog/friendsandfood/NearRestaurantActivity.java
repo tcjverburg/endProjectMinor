@@ -38,7 +38,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,8 +69,8 @@ public class NearRestaurantActivity extends FragmentActivity implements OnMapRea
     Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
-    Map<String, ArrayList> restaurantMap = new HashMap<>();
-    ArrayList<String> restaurantInfo = new ArrayList<>();
+    Map<String, String> restaurantMap = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -336,8 +335,7 @@ public class NearRestaurantActivity extends FragmentActivity implements OnMapRea
                             .getDouble(LONGITUDE);
                     reference = place.getString(REFERENCE);
                     icon = place.getString(ICON);
-                    restaurantInfo.add(place_id + "," + latitude + "," + longitude);
-                    restaurantMap.put(placeName, restaurantInfo);
+                    restaurantMap.put(placeName, place_id);
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     LatLng latLng = new LatLng(latitude, longitude);
@@ -365,12 +363,9 @@ public class NearRestaurantActivity extends FragmentActivity implements OnMapRea
     @Override
     public boolean onMarkerClick(Marker marker) {
         Log.i("GoogleMapActivity", "onMarkerClick");
-        Toast.makeText(getApplicationContext(),
-                "Marker Clicked: " + marker.getSnippet(), Toast.LENGTH_LONG)
-                .show();
         Intent intent = new Intent(NearRestaurantActivity.this,SelectedRestaurantActivity.class);
         intent.putExtra("restaurantName", marker.getTitle());
-        intent.putExtra("restaurantInfo", restaurantMap.get(marker.getTitle()));
+        intent.putExtra("restaurantID", restaurantMap.get(marker.getTitle()));
         startActivity(intent);
         return false;
     }
