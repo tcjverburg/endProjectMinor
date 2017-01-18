@@ -57,6 +57,9 @@ import static nl.mprog.friendsandfood.AppConfig.VICINITY;
 import static nl.mprog.friendsandfood.AppConfig.ZERO_RESULTS;
 
 // Source:https://www.androidtutorialpoint.com/intermediate/android-map-app-showing-current-location-android/
+// Source: https://www.youtube.com/watch?v=Gyaay7OTy-w
+// Source: http://androidmastermind.blogspot.nl/2016/06/android-google-maps-with-nearyby-places.html
+
 
 public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -71,8 +74,6 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     Map<String, String> restaurantMap = new HashMap<>();
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,14 +92,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         //mapFragment.getView().setVisibility(View.INVISIBLE);
         mapFragment.getMapAsync(this);
 
-
-
-
-
-        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=33.8670522,151.1957362&radius=500&type=restaurant&key=AIzaSyCsHjs_jwTfSMNO_JlKz_Yr1T1AcqfWFdA
     }
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.

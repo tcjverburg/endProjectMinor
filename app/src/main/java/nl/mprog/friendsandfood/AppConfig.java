@@ -2,6 +2,8 @@ package nl.mprog.friendsandfood;
 
 /**
  * Created by Gebruiker on 16-1-2017.
+ *
+ * SOURCE:
  */
 
 public final class AppConfig {
