@@ -25,3 +25,10 @@ In the weekend I made connection to the Google Places API and the Google Maps AP
 ##Monday 16-01
 Today I was able to succesfully implement the Google Places API and get all the necessay information to connect the users for the Firebase Database. My plan for tomorrow is to try and save the first reviews and connect them to specific restaurants and users(writers of the review). 
 
+##Tuesday 17-01
+Today I did not have that much time to work on the project, seeing as I had a lot of trouble getting to Amsterdam. However, I was able to save more data to Firebase and plan to find a way to read this data tomorrow. 
+
+##Wednesday 18-01
+The plan for today was to finish the alpha seeing as the only real challenge ahead was reading the Firebase data and I succeeded in this. For tomorrow I do not have anything planned, except finishing the style sheet with my group.
+
+
