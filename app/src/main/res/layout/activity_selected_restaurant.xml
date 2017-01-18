@@ -8,13 +8,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/selected_restaurant_name"/>
 
-    <ListView
-        android:id="@+id/listViewReviewFriends"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        />
-
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
@@ -23,6 +16,15 @@
         android:stepSize="1.0"
         android:rating="3"
         android:isIndicator="true"/>
+
+    <ListView
+        android:id="@+id/listViewReviewFriends"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        />
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

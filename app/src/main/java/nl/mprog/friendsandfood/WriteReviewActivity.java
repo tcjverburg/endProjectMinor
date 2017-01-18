@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RatingBar;
 
+import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Gebruiker on 12-1-2017.
@@ -26,9 +31,13 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
 
     private FirebaseUser user;
     private DatabaseReference myRefReviews;
+    private DatabaseReference myRefReviewsInfo;
     RatingBar ratingBar;
     String restaurantID;
+    String restaurantName;
     String reviewID;
+    final String profile = Profile.getCurrentProfile().getId();
+    EditText editText;
 
 
     @Override
@@ -39,12 +48,18 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
         Intent intent = getIntent();
         findViewById(R.id.btnSubmitReview).setOnClickListener(this);
         restaurantID = intent.getStringExtra("restaurantID");
+        restaurantName = intent.getStringExtra("restaurantName");
+        editText = (EditText) findViewById(R.id.edit_text_review);
 
         //Firebase database, database reference and authentication.
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRefReviews = database.getReference("reviews");
+
+        Log.d("profile", profile);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
 
 
 
@@ -59,7 +74,8 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
                     String oldSearchTerm = child.getValue().toString();
                     oldReviews.add(oldSearchTerm);
                 }
-                String reviewID = user.getUid() + oldReviews.size();
+                String reviewID = profile + oldReviews.size();
+                Log.d("hoi", "hoi");
                 getReference(reviewID);
             }
             @Override
@@ -72,14 +88,19 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void getReference(String newReviewID){
+        myRefReviewsInfo = myRefReviews.child(newReviewID);
         reviewID = newReviewID;
     }
 
     @Override
     public void onClick(View v) {
-
-        myRefReviews.child(reviewID).child("Restaurant").setValue(restaurantID);
-        myRefReviews.child(reviewID).child("Writer").setValue(Profile.getCurrentProfile().getId());
-        myRefReviews.child(reviewID).child("Rating").setValue(ratingBar.getRating());
+        Map<String, Object> reviewInfo = new HashMap<>();
+        reviewInfo.put("ReviewID", reviewID);
+        reviewInfo.put("RestaurantID", restaurantID);
+        reviewInfo.put("RestaurantName", restaurantName);
+        reviewInfo.put("Writer", profile);
+        reviewInfo.put("Rating", ratingBar.getRating());
+        reviewInfo.put("Text", String.valueOf(editText.getText()));
+        myRefReviews.child(reviewID).updateChildren(reviewInfo);
     }
 }

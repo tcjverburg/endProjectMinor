@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -17,6 +16,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -27,9 +27,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.util.ArrayList;
 
 /**
  * LoginActivity.java
@@ -44,9 +48,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private static final String TAG = "FacebookLogin";
-
-    private TextView mStatusTextView;
-    private TextView mDetailTextView;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -66,10 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
-        // Views
-        mStatusTextView = (TextView) findViewById(R.id.status);
-        mDetailTextView = (TextView) findViewById(R.id.detail);
-        //findViewById(R.id.log_out_button).setOnClickListener(this);
+
 
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -86,9 +84,9 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     if (rawdata != null) {
                         Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
-                        intent.putExtra("jsondata", rawdata);
-                        intent.putExtra("uid", user.getUid());
+                        saveFriendsToFirebase(rawdata);
                         startActivity(intent);
+                        updateUI(user);
                     }
                     else {
                         signOut();
@@ -98,7 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
                 // [START_EXCLUDE]
-                updateUI(user);
                 // [END_EXCLUDE]
             }
         };
@@ -112,6 +109,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult login_result) {
+                findViewById(R.id.login_button).setVisibility(View.INVISIBLE);
+
                 Log.d(TAG, "facebook:onSuccess:" + login_result);
                 handleFacebookAccessToken(login_result.getAccessToken());
                 new GraphRequest(
@@ -124,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                                 try {
                                     JSONArray rawName = response.getJSONObject().getJSONArray("data");
                                     rawdata = rawName.toString();
+
                                     Log.d("RAWDATA", rawdata);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -209,6 +209,26 @@ public class LoginActivity extends AppCompatActivity {
     }
     // [END auth_with_facebook]
 
+    public void saveFriendsToFirebase(String rawData){
+        String profile = Profile.getCurrentProfile().getId();
+
+        //Firebase database, database reference and authentication.
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRefFriends = database.getReference("users").child(profile).child("friends");
+        ArrayList<String> friends = new ArrayList<String>();
+        JSONArray friendslist;
+// Dit bij login doen, dan hier weer uitlezen uit Firebase met datasnapshot
+        try {
+            friendslist = new JSONArray(rawData);
+            for (int l=0; l < friendslist.length(); l++) {
+                friends.add(friendslist.getJSONObject(l).getString("name"));
+                myRefFriends.child(friendslist.getJSONObject(l).getString("id")).setValue(friendslist.getJSONObject(l).getString("name"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void signOut() {
         mAuth.signOut();
         LoginManager.getInstance().logOut();
@@ -217,15 +237,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            mStatusTextView.setText(getString(R.string.facebook_status_fmt, user.getDisplayName()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
             //findViewById(R.id.login_button).setVisibility(View.GONE);
             //findViewById(R.id.log_out_button).setVisibility(View.VISIBLE);
         } else {
-            mStatusTextView.setText(null);
-            mDetailTextView.setText(null);
-            findViewById(R.id.login_button).setVisibility(View.INVISIBLE);
             findViewById(R.id.login_button).setVisibility(View.VISIBLE);
             //findViewById(R.id.login_button).setVisibility(View.VISIBLE);
             //findViewById(R.id.log_out_button).setVisibility(View.GONE);

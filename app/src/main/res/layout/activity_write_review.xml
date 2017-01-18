@@ -18,12 +18,12 @@
         android:rating="0" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/edit_text_review"
         android:inputType="textCapSentences|textMultiLine"
         android:maxLength="100"
         android:maxLines="10"
-        android:padding="5dp"
         />
 
 </LinearLayout>

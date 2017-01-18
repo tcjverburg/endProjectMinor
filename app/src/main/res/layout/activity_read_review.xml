@@ -8,4 +8,24 @@
         android:layout_height="wrap_content"
         android:id="@+id/review_header"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/restaurant_name"/>
+
+    <RatingBar
+        android:id="@+id/ratingBarReadReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:stepSize="1.0"
+        android:rating="0"
+        android:isIndicator="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/review_text"/>
+
+
+
 </LinearLayout>

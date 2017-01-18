@@ -2,18 +2,18 @@ package nl.mprog.friendsandfood;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
 import com.facebook.Profile;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -21,64 +21,66 @@ import java.util.ArrayList;
  * Created by Gebruiker on 11-1-2017.
  */
 
-public class FriendsListActivity extends AppCompatActivity implements View.OnClickListener{
+public class FriendsListActivity extends BaseActivity implements View.OnClickListener{
 
     private ListView listView;
-    private DatabaseReference myRefFriends;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+    DatabaseReference mRefFriends;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
 
-        Intent intent = getIntent();
-        String jsondata = intent.getStringExtra("jsondata");
-        String userUid = intent.getStringExtra("uid");
-
-        JSONArray friendslist;
-        ArrayList<String> friends = new ArrayList<String>();
-
+        findViewById(R.id.restaurants_nav).setOnClickListener(this);
+        findViewById(R.id.own_reviews_nav).setOnClickListener(this);
         listView = (ListView) findViewById(R.id.listViewFriends);
 
-        findViewById(R.id.own_reviews_nav).setOnClickListener(this);
-        findViewById(R.id.restaurants_nav).setOnClickListener(this);
-
+        Intent intent = getIntent();
         String profile = Profile.getCurrentProfile().getId();
+        mRefFriends = database.getReference("users").child(profile).child("friends");
 
-        //Firebase database, database reference and authentication.
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        assert userUid != null;
-        myRefFriends = database.getReference("users").child(profile).child("friends");
+        mRefFriends.addValueEventListener(new ValueEventListener() {
+            ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
 
-// Dit bij login doen, dan hier weer uitlezen uit Firebase met datasnapshot
-        try {
-            friendslist = new JSONArray(jsondata);
-            for (int l=0; l < friendslist.length(); l++) {
-                friends.add(friendslist.getJSONObject(l).getString("name"));
-                myRefFriends.child(friendslist.getJSONObject(l).getString("id")).setValue(friendslist.getJSONObject(l).getString("name"));
+            //Database listener which fires when the database changes and counts reviews.
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    String friendName = child.getValue().toString();
+                    mFriendsCompleteNames.add(friendName);
+
+                }
+                ListAdapter adapter = adapter(mFriendsCompleteNames);
+                listView.setAdapter(adapter);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 
-        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, friends); // simple textview for list item
-        listView.setAdapter(adapter);
-
+    public ListAdapter adapter(ArrayList<String> arrayList){
+        //Returns arrayAdapter for list view.
+        return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
     }
 
     @Override
     public void onClick(View v) {
         //On click method for the navigation bar and other buttons.
-
         int i = v.getId();
         if (i == R.id.own_reviews_nav) {
             Intent getNameScreen = new Intent(getApplicationContext(), YourReviewsActivity.class);
             startActivity(getNameScreen);
+            finish();
         }
         else if (i == R.id.restaurants_nav) {
-           Intent getNameScreen = new Intent(getApplicationContext(), NearRestaurantActivity.class);
+            Intent getNameScreen = new Intent(getApplicationContext(), NearRestaurantActivity.class);
             startActivity(getNameScreen);
-
+            finish();
         }
     }
 

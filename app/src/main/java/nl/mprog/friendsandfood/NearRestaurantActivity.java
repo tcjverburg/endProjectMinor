@@ -9,9 +9,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -58,11 +58,12 @@ import static nl.mprog.friendsandfood.AppConfig.ZERO_RESULTS;
 
 // Source:https://www.androidtutorialpoint.com/intermediate/android-map-app-showing-current-location-android/
 
-public class NearRestaurantActivity extends FragmentActivity implements OnMapReadyCallback,
+public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
-        GoogleMap.OnMarkerClickListener{
+        GoogleMap.OnMarkerClickListener,
+        View.OnClickListener{
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
@@ -72,10 +73,14 @@ public class NearRestaurantActivity extends FragmentActivity implements OnMapRea
     Map<String, String> restaurantMap = new HashMap<>();
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_near_restaurant);
+
+        findViewById(R.id.friends_nav).setOnClickListener(this);
+        findViewById(R.id.own_reviews_nav).setOnClickListener(this);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -369,4 +374,21 @@ public class NearRestaurantActivity extends FragmentActivity implements OnMapRea
         startActivity(intent);
         return false;
     }
+
+    @Override
+    public void onClick(View v) {
+        //On click method for the navigation bar and other buttons.
+        int i = v.getId();
+        if (i == R.id.own_reviews_nav) {
+            Intent getNameScreen = new Intent(getApplicationContext(), YourReviewsActivity.class);
+            startActivity(getNameScreen);
+            finish();
+        }
+        else if (i == R.id.friends_nav) {
+            Intent getNameScreen = new Intent(getApplicationContext(), FriendsListActivity.class);
+            startActivity(getNameScreen);
+            finish();
+        }
+    }
+
 }
