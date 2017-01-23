@@ -93,9 +93,7 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        DatabaseReference mRefActivity = database.getReference("users").child(profile).child("activity");
         String time = String.valueOf(System.currentTimeMillis());
-        Map<String, Object> activityInfo = new HashMap<>();
         Map<String, Object> reviewInfo = new HashMap<>();
         reviewInfo.put("ReviewID", reviewID);
         reviewInfo.put("RestaurantID", restaurantID);
@@ -103,10 +101,7 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
         reviewInfo.put("Writer", profile);
         reviewInfo.put("Rating", ratingBar.getRating());
         reviewInfo.put("Text", String.valueOf(editText.getText()));
-        activityInfo.put("Type", "Review");
-        activityInfo.put("RestaurantName", restaurantName);
-        activityInfo.put("Time", time);
-        mRefActivity.child(time+profile).updateChildren(activityInfo);
+        reviewInfo.put("Time", time);
         myRefReviews.child(reviewID).updateChildren(reviewInfo);
     }
 }
