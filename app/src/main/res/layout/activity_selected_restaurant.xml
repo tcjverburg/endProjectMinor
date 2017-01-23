@@ -8,6 +8,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/selected_restaurant_name"/>
 
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toggleButton"
+        android:textOff="@string/checked_out"
+        android:textOn="@string/checked_in"/>
+
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
@@ -24,6 +31,12 @@
         android:background="@color/colorWhite"
         />
 
+    <ListView
+        android:id="@+id/listViewCheckIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        />
 
     <Button
         android:layout_width="wrap_content"

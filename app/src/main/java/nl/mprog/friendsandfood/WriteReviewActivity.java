@@ -32,6 +32,7 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
     private FirebaseUser user;
     private DatabaseReference myRefReviews;
     private DatabaseReference myRefReviewsInfo;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
     RatingBar ratingBar;
     String restaurantID;
     String restaurantName;
@@ -54,7 +55,6 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
         //Firebase database, database reference and authentication.
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRefReviews = database.getReference("reviews");
 
         Log.d("profile", profile);
@@ -75,7 +75,6 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
                     oldReviews.add(oldSearchTerm);
                 }
                 String reviewID = profile + oldReviews.size();
-                Log.d("hoi", "hoi");
                 getReference(reviewID);
             }
             @Override
@@ -94,6 +93,9 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        DatabaseReference mRefActivity = database.getReference("users").child(profile).child("activity");
+        String time = String.valueOf(System.currentTimeMillis());
+        Map<String, Object> activityInfo = new HashMap<>();
         Map<String, Object> reviewInfo = new HashMap<>();
         reviewInfo.put("ReviewID", reviewID);
         reviewInfo.put("RestaurantID", restaurantID);
@@ -101,6 +103,10 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
         reviewInfo.put("Writer", profile);
         reviewInfo.put("Rating", ratingBar.getRating());
         reviewInfo.put("Text", String.valueOf(editText.getText()));
+        activityInfo.put("Type", "Review");
+        activityInfo.put("RestaurantName", restaurantName);
+        activityInfo.put("Time", time);
+        mRefActivity.child(time+profile).updateChildren(activityInfo);
         myRefReviews.child(reviewID).updateChildren(reviewInfo);
     }
 }

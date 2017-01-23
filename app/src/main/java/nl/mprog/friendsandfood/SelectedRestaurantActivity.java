@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
@@ -23,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Gebruiker on 12-1-2017.
@@ -30,10 +33,13 @@ import java.util.HashMap;
 
 public class SelectedRestaurantActivity extends AppCompatActivity implements View.OnClickListener{
     ListView listView;
+    ListView listViewCheckIn;
     String restaurantID;
     String restaurantName;
     DatabaseReference mRefFriends;
     DatabaseReference mRefReviews;
+    DatabaseReference mRefCheckins;
+    DatabaseReference mRefActivity;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
     ArrayList<String> mFriendsID = new ArrayList<>();
@@ -61,12 +67,14 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
 
         name.setText(restaurantName);
         listView = (ListView) findViewById(R.id.listViewReviewFriends);
+        listViewCheckIn = (ListView) findViewById(R.id.listViewCheckIn);
+
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        String profile = Profile.getCurrentProfile().getId();
+        final String profile = Profile.getCurrentProfile().getId();
         mRefFriends = database.getReference("users").child(profile).child("friends");
-
-
+        mRefCheckins =  database.getReference("checkin").child(restaurantID);
+        mRefActivity = database.getReference("users").child(profile).child("activity");
 
         mRefFriends.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
@@ -80,6 +88,7 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
                     mFriendsCompleteNames.add(friendName);
                     mFriendsID.add(friendID);
                     findReviews(mFriendsID);
+                    findCheckin(mFriendsID);
                 }
             }
             @Override
@@ -88,6 +97,23 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
         });
 
         clickSelectReviewFriend();
+
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.toggleButton);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    String time = String.valueOf(System.currentTimeMillis());
+                    Map<String, Object> activityInfo = new HashMap<>();
+                    activityInfo.put("Type", "CheckIn");
+                    activityInfo.put("RestaurantName", restaurantName);
+                    activityInfo.put("Time", time);
+                    mRefCheckins.child(profile).setValue("True");
+                    mRefActivity.child(time+profile).updateChildren(activityInfo);
+                } else {
+                    mRefCheckins.child(profile).setValue("False");
+                }
+            }
+        });
     }
 
     public void findReviews(final ArrayList<String> friends){
@@ -105,8 +131,10 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
 
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
+
                     for (int i = 0; i < friends.size(); i++) {
-                        String friend_id = friends.get(i).toString();if (reviewHashFirebase.get("Writer").equals(friend_id) & reviewHashFirebase.get("RestaurantID").equals(restaurantID)){
+                        String friend_id = friends.get(i).toString();
+                        if (reviewHashFirebase.get("Writer").equals(friend_id) & reviewHashFirebase.get("RestaurantID").equals(restaurantID)){
                                 friendWriterNames.add(mFriendsCompleteNames.get(i));
                                 allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
                                 allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
@@ -124,14 +152,7 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
                     }
                     ListAdapter adapter = adapter(friendWriterNames);
                     listView.setAdapter(adapter);
-
-                    //Map<String, String> reviewInfo = new HashMap<>();
-                    //String value = child.getValue().toString();
-                    //String key = child.getKey();
-                    //reviewInfo.put(key, value);
-                    //findReviews(mFriends);
                 }
-
             }
 
             @Override
@@ -140,6 +161,40 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
         });
 
         }
+
+    public void findCheckin(final ArrayList<String> friends){
+
+        listener = mRefCheckins.addValueEventListener(new ValueEventListener() {
+            //Database listener which fires when the database changes and counts reviews.
+            ArrayList<String> friendWriterNames = new ArrayList<String>();
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+                    String userID = child.getKey();
+                    String checkIn = child.getValue().toString();
+
+                    for (int i = 0; i < friends.size(); i++) {
+                        String friend_id = friends.get(i);
+                        if (userID.equals(friend_id)& checkIn.equals("True")){
+                            friendWriterNames.add(mFriendsCompleteNames.get(i));
+                        }
+                    }
+                    ListAdapter adapter = adapter(friendWriterNames);
+                    listViewCheckIn.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });}
+
+
+
 
     public ListAdapter adapter(ArrayList<String> arrayList){
         //Returns arrayAdapter for list view.

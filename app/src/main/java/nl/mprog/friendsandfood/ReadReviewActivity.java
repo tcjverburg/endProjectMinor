@@ -19,11 +19,14 @@ public class ReadReviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_review);
         Intent intent = getIntent();
+
         HashMap<String, String> hashMap = (HashMap<String, String>)intent.getSerializableExtra("reviewHash");
+
         String nameWriter = intent.getStringExtra("nameWriter");
         TextView header = (TextView) findViewById(R.id.review_header);
         TextView text = (TextView) findViewById(R.id.review_text);
         RatingBar rBar = (RatingBar) findViewById(R.id.ratingBarReadReview);
+
         header.setText("Review from " + nameWriter + " of Restaurant : " + hashMap.get("RestaurantName"));
         text.setText(hashMap.get("Text"));
         rBar.setRating(Float.valueOf(String.valueOf(hashMap.get("Rating"))));

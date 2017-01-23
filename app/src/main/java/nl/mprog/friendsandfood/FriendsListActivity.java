@@ -7,7 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,12 +37,13 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
         listView = (ListView) findViewById(R.id.listViewFriends);
 
-        Intent intent = getIntent();
         String profile = Profile.getCurrentProfile().getId();
         mRefFriends = database.getReference("users").child(profile).child("friends");
+        //mRefActivityFriends = database.getReference("users");
 
         mRefFriends.addValueEventListener(new ValueEventListener() {
             ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
+            ArrayList<String> mFriendsCompleteIDs = new ArrayList<>();
 
             //Database listener which fires when the database changes and counts reviews.
             @Override
@@ -51,7 +51,9 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
 
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     String friendName = child.getValue().toString();
+                    String friendID = child.getKey();
                     mFriendsCompleteNames.add(friendName);
+                    mFriendsCompleteIDs.add(friendID);
 
                 }
                 ListAdapter adapter = adapter(mFriendsCompleteNames);
