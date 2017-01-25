@@ -3,11 +3,11 @@ package nl.mprog.friendsandfood;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
@@ -27,7 +27,7 @@ import java.util.Map;
  * Created by Gebruiker on 12-1-2017.
  */
 
-public class WriteReviewActivity extends AppCompatActivity implements View.OnClickListener {
+public class WriteReviewActivity extends BaseActivity implements View.OnClickListener {
 
     private FirebaseUser user;
     private DatabaseReference myRefReviews;
@@ -51,6 +51,9 @@ public class WriteReviewActivity extends AppCompatActivity implements View.OnCli
         restaurantID = intent.getStringExtra("restaurantID");
         restaurantName = intent.getStringExtra("restaurantName");
         editText = (EditText) findViewById(R.id.edit_text_review);
+        TextView infoReview = (TextView)findViewById(R.id.write_restaurant_info);
+
+        infoReview.setText(restaurantName);
 
         //Firebase database, database reference and authentication.
         FirebaseAuth mAuth = FirebaseAuth.getInstance();

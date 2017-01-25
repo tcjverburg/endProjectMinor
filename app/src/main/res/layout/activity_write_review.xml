@@ -8,14 +8,40 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/write_review_header"
+        android:textSize="20sp"
+        android:text="Writing a review about:"
+        android:paddingBottom="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/write_restaurant_info"
+        android:textSize="20sp"
+        android:paddingBottom="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/write_review_info"
+        android:textSize="15sp"
+        android:text="Give the selected restaurant a rating and share your thoughts on the restaurant below:"/>
+
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
         android:stepSize="1.0"
-        android:rating="0" />
+        android:rating="0"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" />
 
     <EditText
         android:layout_width="match_parent"
@@ -26,13 +52,21 @@
         android:maxLines="10"
         />
 
-</LinearLayout>
-
     <Button
         android:id="@+id/btnSubmitReview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="@string/submit" />
+        android:text="@string/submit"
+        android:paddingTop="10dp"
+        android:layout_gravity="right"
+        />
+
+
+
+</LinearLayout>
+
+
+
+
 
 </RelativeLayout>

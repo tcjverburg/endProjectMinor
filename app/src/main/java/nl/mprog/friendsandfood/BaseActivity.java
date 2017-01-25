@@ -32,8 +32,6 @@ public class BaseActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         user = mAuth.getCurrentUser();
 
-
-
         //The listener which starts the LoginActivity if the user is logged out.
         mAuthListener = new FirebaseAuth.AuthStateListener() {
 

@@ -3,7 +3,7 @@ package nl.mprog.friendsandfood;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,7 +30,7 @@ import java.util.Map;
  * Created by Gebruiker on 12-1-2017.
  */
 
-public class SelectedRestaurantActivity extends AppCompatActivity implements View.OnClickListener{
+public class SelectedRestaurantActivity extends BaseActivity implements View.OnClickListener{
     ListView listView;
     ListView listViewCheckIn;
     String restaurantID;
@@ -72,7 +72,7 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
         FacebookSdk.sdkInitialize(getApplicationContext());
         final String profile = Profile.getCurrentProfile().getId();
         mRefFriends = database.getReference("users").child(profile).child("friends");
-        mRefCheckins =  database.getReference("checkin").child(restaurantID).child(profile);
+        mRefCheckins =  database.getReference("checkin").child(restaurantID);
         mRefActivity = database.getReference("users").child(profile).child("activity");
 
         mRefFriends.addValueEventListener(new ValueEventListener() {
@@ -106,9 +106,9 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
                     activityInfo.put("Time", time);
                     activityInfo.put("RestaurantName", restaurantName);
                     activityInfo.put("User", profile);
-                    mRefCheckins.setValue(activityInfo);
+                    mRefCheckins.child(profile).setValue(activityInfo);
                 } else {
-                    mRefCheckins.removeValue();
+                    mRefCheckins.child(profile).removeValue();
                 }
             }
         });
@@ -160,27 +160,28 @@ public class SelectedRestaurantActivity extends AppCompatActivity implements Vie
 
         mRefCheckins.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
-            ArrayList<String> friendCheckIn = new ArrayList<String>();
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                HashMap<String, String> allCheckins = new HashMap<String, String>();
+                ArrayList<String> friendCheckIn = new ArrayList<String>();
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    HashMap<String, HashMap> checkinHashFirebase = (HashMap<String, HashMap>) child.getValue();
+                    Log.d("Hashmapselect", checkinHashFirebase.toString());
 
-                    allCheckins.put(child.getKey(), child.getValue().toString());
-                }
-                for (int i = 0; i < friends.size(); i++) {
-                    String friend_id = friends.get(i);
-                    String user = allCheckins.get("User");
-                    if (user != null) {
-                        if (allCheckins.get("User").equals(friend_id)){
-                           friendCheckIn.add(mFriendsCompleteNames.get(i));
+                    for (int z = 0; z < friends.size(); z++) {
+                        String friend_id = friends.get(z);
+                        if (checkinHashFirebase.get("User") != null ) {
+                            String user = String.valueOf(checkinHashFirebase.get("User"));
+                            if (user.equals(friend_id)) {
+                                friendCheckIn.add(mFriendsCompleteNames.get(z));
+                            }
                         }
+
                     }
+                    ListAdapter adapter = adapter(friendCheckIn);
+                    listViewCheckIn.setAdapter(adapter);
                 }
-                ListAdapter adapter = adapter(friendCheckIn);
-                listViewCheckIn.setAdapter(adapter);
             }
 
             @Override
