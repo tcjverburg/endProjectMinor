@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
@@ -106,5 +107,8 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
         reviewInfo.put("Text", String.valueOf(editText.getText()));
         reviewInfo.put("Time", time);
         myRefReviews.child(reviewID).updateChildren(reviewInfo);
+        Toast.makeText(getApplicationContext(), "Review submitted!",
+                Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

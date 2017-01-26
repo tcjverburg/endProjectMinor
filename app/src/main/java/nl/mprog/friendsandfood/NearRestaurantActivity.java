@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -82,6 +83,11 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
 
         findViewById(R.id.friends_nav).setOnClickListener(this);
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
+
+        //Sets the color of the navigation button of current activity.
+        ImageButton Nav = (ImageButton)findViewById(R.id.restaurants_nav);
+        int myColor = getResources().getColor(R.color.colorButtonPressed);
+        Nav.setBackgroundColor(myColor);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();

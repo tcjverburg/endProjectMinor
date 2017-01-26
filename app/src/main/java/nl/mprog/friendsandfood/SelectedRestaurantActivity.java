@@ -3,7 +3,6 @@ package nl.mprog.friendsandfood;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -53,7 +52,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_restaurant);
-
 
         Intent intent = getIntent();
         restaurantName = intent.getStringExtra("restaurantName");
@@ -118,7 +116,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
 
         mRefReviews =  database.getReference("reviews");
 
-
         listener = mRefReviews.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
             ArrayList<String> friendWriterNames = new ArrayList<String>();
@@ -153,8 +150,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
-        }
+    }
 
     public void findCheckin(final ArrayList<String> friends){
 
@@ -167,7 +163,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     HashMap<String, HashMap> checkinHashFirebase = (HashMap<String, HashMap>) child.getValue();
-                    Log.d("Hashmapselect", checkinHashFirebase.toString());
 
                     for (int z = 0; z < friends.size(); z++) {
                         String friend_id = friends.get(z);
@@ -213,7 +208,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                 getNameScreen.putExtra("reviewHash", selectedReviewHash);
                 getNameScreen.putExtra("nameWriter", nameWriter);
                 startActivity(getNameScreen);
-                finish();
             }
         });
     }
@@ -228,7 +222,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             intent.putExtra("restaurantName", restaurantName);
             startActivity(intent);
             mRefReviews.removeEventListener(listener);
-            finish();
         }
     }
 }

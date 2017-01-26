@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -52,8 +53,11 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
         listView = (ListView) findViewById(R.id.listViewFriends);
 
+        //Sets the color of the navigation button of current activity.
+        ImageButton Nav = (ImageButton)findViewById(R.id.friends_nav);
 
-
+        int myColor = getResources().getColor(R.color.colorButtonPressed);
+        Nav.setBackgroundColor(myColor);
 
         String profile = Profile.getCurrentProfile().getId();
         mRefFriends = database.getReference("users").child(profile).child("friends");
@@ -71,8 +75,6 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                     String friendID = child.getKey();
                     mFriendsCompleteNames.add(friendName);
                     mFriendsCompleteIDs.add(friendID);
-
-
                 }
                 findReviews(mFriendsCompleteIDs);
             }

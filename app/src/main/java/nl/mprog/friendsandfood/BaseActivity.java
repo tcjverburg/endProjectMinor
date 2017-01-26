@@ -69,6 +69,7 @@ public class BaseActivity extends AppCompatActivity {
         }
         return (super.onOptionsItemSelected(item));
     }
+
     public void signOut() {
         mAuth.signOut();
         LoginManager.getInstance().logOut();

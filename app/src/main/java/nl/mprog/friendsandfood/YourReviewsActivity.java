@@ -6,8 +6,10 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
@@ -25,14 +27,12 @@ import java.util.HashMap;
 
 public class YourReviewsActivity extends BaseActivity implements View.OnClickListener{
     ListView listView;
-    DatabaseReference mRefFriends;
     DatabaseReference mRefReviews;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     String profile = Profile.getCurrentProfile().getId();
     ArrayList<String> allReviewIDs = new ArrayList<String>();
     HashMap<String,HashMap> allReviewsHash = new HashMap<String, HashMap>();
-
-
+    ValueEventListener listener;
 
 
     @Override
@@ -43,15 +43,22 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.restaurants_nav).setOnClickListener(this);
         findViewById(R.id.friends_nav).setOnClickListener(this);
 
-        ValueEventListener listener;
-        //Demo
-        restaurants.add("Restaurant 1");
         listView = (ListView) findViewById(R.id.listViewReviews);
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, restaurants); // simple text view for list item
         listView.setAdapter(adapter);
 
+        //Sets the color of the navigation button of current activity.
+        ImageButton Nav = (ImageButton)findViewById(R.id.own_reviews_nav);
+        int myColor = getResources().getColor(R.color.colorButtonPressed);
+        Nav.setBackgroundColor(myColor);
+
+        getOwnReviews();
+        clickSelectedReview();
+        clickDeleteReview();
+    }
 
 
+    public void getOwnReviews(){
 
         mRefReviews =  database.getReference("reviews");
         listener = mRefReviews.addValueEventListener(new ValueEventListener() {
@@ -64,41 +71,48 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
                     if (reviewHashFirebase.get("Writer").equals(profile)){
-                            ownReviews.add(reviewHashFirebase.get("RestaurantName"));
-                            allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
-                            allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
-
+                        ownReviews.add(reviewHashFirebase.get("RestaurantName"));
+                        allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
+                        allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
                     }
-                    }
-                    ListAdapter adapter = adapter(ownReviews);
-                    listView.setAdapter(adapter);
-
-                    //Map<String, String> reviewInfo = new HashMap<>();
-                    //String value = child.getValue().toString();
-                    //String key = child.getKey();
-                    //reviewInfo.put(key, value);
-                    //findReviews(mFriends);
                 }
-
+                ListAdapter adapter = adapter(ownReviews);
+                listView.setAdapter(adapter);
+            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
-        clickSelectedReview();
     }
 
     public void clickSelectedReview(){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String nameWriter = "yourself";
+                String nameWriter = "You";
                 String reviewID = allReviewIDs.get(position);
                 HashMap selectedReviewHash = allReviewsHash.get(reviewID);
                 Intent getNameScreen = new Intent(getApplicationContext(),ReadReviewActivity.class);
                 getNameScreen.putExtra("reviewHash", selectedReviewHash);
                 getNameScreen.putExtra("nameWriter", nameWriter);
                 startActivity(getNameScreen);
+            }
+        });
+    }
+
+
+    public void clickDeleteReview() {
+        //Deletes favorite from list view and from shared preference after long clicking the item.
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String reviewID = allReviewIDs.get(position);
+                mRefReviews.child(reviewID).removeValue();
+                Toast.makeText(getApplicationContext(), "Deleted Review",
+                        Toast.LENGTH_SHORT).show();
+                getOwnReviews();
+                return true;
             }
         });
     }
