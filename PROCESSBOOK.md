@@ -40,4 +40,16 @@ THe presentation was a lot easier this week, seeing as I had a lot more to prese
 ##Weekend 21-01 and 22-01
 In this weekend I did not really work a lot on the application, seeing as I was quite ahead of schedule compared to several classmates. Still, I did think a lot about how to structure my Firebase Database to write and read the new data.
 
+##Monday 23-01
+Today I really struggled with the Firebase database with how I wanted to save all the data, seeing as I wanted to have as little as possible that there was the same data in different places in my database. Furthermore, the async tasks of the Firebase datasnapshots are giving me a hard time.
+
+##Tuesday 24-01
+Seeing as I was ill today, I did not do anything significant to the application. 
+
+##Wednesday 25-01
+At the end of the day I had cleaned up a lot of visual aspects of the application, and continued to work on the activity feed. In the end, I was able to finish being able to being able to get whether a friend wrote a review that day. Tomorrow, I will look at the checkin part.
+
+##Thursday 26-01
+All is done, minimal viable product is there but I still wish to add a few list adapters to make it visually more pleasing.
+
 
