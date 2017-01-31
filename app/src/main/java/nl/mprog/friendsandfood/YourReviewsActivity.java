@@ -111,7 +111,7 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
                 mRefReviews.child(reviewID).removeValue();
                 Toast.makeText(getApplicationContext(), "Deleted Review",
                         Toast.LENGTH_SHORT).show();
-                getOwnReviews();
+                //TESTING :   getOwnReviews();
                 return true;
             }
         });

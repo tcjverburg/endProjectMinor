@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,8 +31,12 @@ import java.util.Map;
  */
 
 public class SelectedRestaurantActivity extends BaseActivity implements View.OnClickListener{
-    ListView listView;
     ListView listViewCheckIn;
+
+    ListView listViewRatingBar;
+    CustomAdapterRatingBar customAdapter;
+    List<Review> reviewList;
+
     String restaurantID;
     String restaurantName;
     DatabaseReference mRefFriends;
@@ -45,6 +50,9 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     HashMap<String,HashMap> allReviewsHash = new HashMap<String, HashMap>();
     ValueEventListener listener;
     RatingBar ratingBar;
+    final String profile = Profile.getCurrentProfile().getId();
+    ToggleButton toggle;
+
 
 
 
@@ -52,6 +60,11 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_restaurant);
+
+
+        listViewRatingBar = (ListView)findViewById(R.id.listViewReviewFriends);
+
+
 
         Intent intent = getIntent();
         restaurantName = intent.getStringExtra("restaurantName");
@@ -63,12 +76,10 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         findViewById(R.id.submit).setOnClickListener(this);
 
         name.setText(restaurantName);
-        listView = (ListView) findViewById(R.id.listViewReviewFriends);
         listViewCheckIn = (ListView) findViewById(R.id.listViewCheckIn);
 
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        final String profile = Profile.getCurrentProfile().getId();
         mRefFriends = database.getReference("users").child(profile).child("friends");
         mRefCheckins =  database.getReference("checkin").child(restaurantID);
         mRefActivity = database.getReference("users").child(profile).child("activity");
@@ -95,7 +106,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
 
         clickSelectReviewFriend();
 
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.toggleButton);
+        toggle = (ToggleButton) findViewById(R.id.toggleButton);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -103,6 +114,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                     Map<String, Object> activityInfo = new HashMap<>();
                     activityInfo.put("Time", time);
                     activityInfo.put("RestaurantName", restaurantName);
+                    activityInfo.put("RestaurantID", restaurantID);
                     activityInfo.put("User", profile);
                     mRefCheckins.child(profile).setValue(activityInfo);
                 } else {
@@ -123,6 +135,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                reviewList = new ArrayList<>();
 
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
@@ -134,15 +147,16 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                                 allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
                                 allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
                                 String rating = String.valueOf(reviewHashFirebase.get("Rating"));
-                                totalscore += Integer.valueOf(rating);
+                                Float ratingFloat = Float.valueOf(rating);
+                                totalscore += ratingFloat;
+                                reviewList.add(new Review(mFriendsCompleteNames.get(i), reviewHashFirebase.get("ReviewID"), ratingFloat));
                         }
                     }
                     if (friendWriterNames.size() != 0){
                         float score = totalscore/(friendWriterNames.size());
                         ratingBar.setRating(score);
                     }
-                    ListAdapter adapter = adapter(friendWriterNames);
-                    listView.setAdapter(adapter);
+                    customAdapter(reviewList);
                 }
             }
 
@@ -171,6 +185,9 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                             if (user.equals(friend_id)) {
                                 friendCheckIn.add(mFriendsCompleteNames.get(z));
                             }
+                            else if (user.equals(profile)) {
+                                toggle.setChecked(true);
+                            }
                         }
 
                     }
@@ -193,15 +210,22 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
     }
 
+    public void customAdapter(List<Review> list){
+        //In aparte functie knallen
+        customAdapter = new CustomAdapterRatingBar(getApplicationContext(), list);
+        listViewRatingBar.setAdapter(customAdapter);
+    }
+
 
 
     public void clickSelectReviewFriend() {
         //Starts SearchResultActivity after clicking a previous search term in the list view.
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        listViewRatingBar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String nameWriter = String.valueOf(adapterView.getItemAtPosition(position));
+
+                Review review = (Review) adapterView.getAdapter().getItem(position);
+                String nameWriter = review.getWriter();
                 String reviewID = allReviewIDs.get(position);
                 HashMap selectedReviewHash = allReviewsHash.get(reviewID);
                 Intent getNameScreen = new Intent(getApplicationContext(),ReadReviewActivity.class);

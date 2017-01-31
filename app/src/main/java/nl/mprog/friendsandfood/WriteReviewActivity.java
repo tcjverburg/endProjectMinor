@@ -33,13 +33,13 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
     private FirebaseUser user;
     private DatabaseReference myRefReviews;
     private DatabaseReference myRefReviewsInfo;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    RatingBar ratingBar;
-    String restaurantID;
-    String restaurantName;
-    String reviewID;
-    final String profile = Profile.getCurrentProfile().getId();
-    EditText editText;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private RatingBar ratingBar;
+    private String restaurantID;
+    private String restaurantName;
+    private String reviewID;
+    private final String profile = Profile.getCurrentProfile().getId();
+    private EditText editText;
 
 
     @Override

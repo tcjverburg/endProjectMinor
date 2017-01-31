@@ -48,12 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private static final String TAG = "FacebookLogin";
-
-    // [START declare_auth]
     private FirebaseAuth mAuth;
-    // [END declare_auth]
-
-    // [START declare_auth_listener]
     private FirebaseAuth.AuthStateListener mAuthListener;
     // [END declare_auth_listener]
 
@@ -87,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                         saveFriendsToFirebase(rawdata);
                         startActivity(intent);
                         updateUI(user);
+                        finish();
                     }
                     else {
                         signOut();
@@ -123,8 +119,6 @@ public class LoginActivity extends AppCompatActivity {
                                 try {
                                     JSONArray rawName = response.getJSONObject().getJSONArray("data");
                                     rawdata = rawName.toString();
-
-                                    Log.d("RAWDATA", rawdata);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -236,13 +230,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            //findViewById(R.id.login_button).setVisibility(View.GONE);
-            //findViewById(R.id.log_out_button).setVisibility(View.VISIBLE);
-        } else {
+        if (user == null) {
             findViewById(R.id.login_button).setVisibility(View.VISIBLE);
-            //findViewById(R.id.login_button).setVisibility(View.VISIBLE);
-            //findViewById(R.id.log_out_button).setVisibility(View.GONE);
         }
     }
 

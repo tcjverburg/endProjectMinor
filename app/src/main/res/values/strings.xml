@@ -14,6 +14,6 @@
     <string name="own_reviews">OWN REVIEWS</string>
     <string name="submit_review">Write Review</string>
     <string name="submit">Submit</string>
-    <string name="checked_out">Checked out</string>
-    <string name="checked_in">Checked in</string>
+    <string name="checked_out">Check in!</string>
+    <string name="checked_in">Check out</string>
 </resources>

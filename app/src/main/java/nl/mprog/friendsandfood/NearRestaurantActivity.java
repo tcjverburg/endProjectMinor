@@ -70,11 +70,11 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         View.OnClickListener{
 
     private GoogleMap mMap;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
-    Map<String, String> restaurantMap = new HashMap<>();
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private Marker mCurrLocationMarker;
+    private LocationRequest mLocationRequest;
+    private Map<String, String> restaurantMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +142,8 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
+
+
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -303,13 +305,13 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            Log.d("RESULTT", result);
             try {
                 JSONObject json = new JSONObject(result);
                 parseLocationResult(json);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //Log.d("HTTP Error", result);
         }
     }
     private void parseLocationResult(JSONObject result) {
@@ -382,12 +384,10 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         if (i == R.id.own_reviews_nav) {
             Intent getNameScreen = new Intent(getApplicationContext(), YourReviewsActivity.class);
             startActivity(getNameScreen);
-            finish();
         }
         else if (i == R.id.friends_nav) {
             Intent getNameScreen = new Intent(getApplicationContext(), FriendsListActivity.class);
             startActivity(getNameScreen);
-            finish();
         }
     }
 
