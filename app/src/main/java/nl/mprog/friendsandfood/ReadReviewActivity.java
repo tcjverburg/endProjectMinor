@@ -31,6 +31,5 @@ public class ReadReviewActivity extends BaseActivity {
         nameRestaurant.setText(hashMap.get("RestaurantName"));
         text.setText(hashMap.get("Text"));
         rBar.setRating(Float.valueOf(String.valueOf(hashMap.get("Rating"))));
-
     }
 }

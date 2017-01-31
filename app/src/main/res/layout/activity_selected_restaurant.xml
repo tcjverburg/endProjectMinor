@@ -64,14 +64,14 @@
 
     <ListView
         android:id="@+id/listViewCheckIn"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
-        android:paddingBottom="10dp"
         android:listSelector="@android:color/transparent"
         />
 
     <Button
+        android:paddingTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/submit_review"

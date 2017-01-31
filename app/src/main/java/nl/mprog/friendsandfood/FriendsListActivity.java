@@ -2,7 +2,6 @@ package nl.mprog.friendsandfood;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,22 +22,25 @@ import java.util.List;
 
 /**
  * Created by Gebruiker on 11-1-2017.
+ * needs to be edited
  */
 
 public class FriendsListActivity extends BaseActivity implements View.OnClickListener{
 
     private ListView listView;
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private ValueEventListener listener;
-    private DatabaseReference mRefFriends;
+
     private ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
     private ArrayList<String> mFriendsCompleteIDs = new ArrayList<>();
-    private DatabaseReference mRefReviews;
-    private ArrayList<String> allActivityIDs = new ArrayList<String>();
-    private HashMap<String, HashMap<String, String>> allActivityHash = new HashMap<String, HashMap<String, String>>();
-    private ArrayList<String> friendWriterNames = new ArrayList<String>();
-    private ArrayList<String> friendCheckInNames = new ArrayList<String>();
-    private DatabaseReference  mRefCheckins =  database.getReference("checkin");
+    private ArrayList<String> friendWriterActivity = new ArrayList<>();
+    private ArrayList<String> friendCheckInNames = new ArrayList<>();
+    private ArrayList<String> allActivityIDs = new ArrayList<>();
+    private HashMap<String, HashMap<String, String>> allActivityHash = new HashMap<>();
+
+    private DatabaseReference mRefFriends;
+    private DatabaseReference  mRefCheckins;
+
+    private FirebaseDatabase database;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,9 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         Nav.setBackgroundColor(myColor);
 
         String profile = Profile.getCurrentProfile().getId();
+        database = FirebaseDatabase.getInstance();
         mRefFriends = database.getReference("users").child(profile).child("friends");
+        mRefCheckins =  database.getReference("checkin");
         mainValueEventListener();
 
         clickSelect();
@@ -87,46 +91,41 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
 
     public void findReviews(final ArrayList<String> friends){
 
-        mRefReviews =  database.getReference("reviews");
+        DatabaseReference mRefReviews = database.getReference("reviews");
 
-        listener = mRefReviews.addValueEventListener(new ValueEventListener() {
+        mRefReviews.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long currentTime = System.currentTimeMillis();
 
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
 
                     for (int i = 0; i < friends.size(); i++) {
-                        String friend_id = friends.get(i).toString();
+                        String friend_id = friends.get(i);
+
                         if (reviewHashFirebase.get("Writer").equals(friend_id)){
-                            friendWriterNames.add(mFriendsCompleteNames.get(i) + " wrote a review of " + reviewHashFirebase.get("RestaurantName"));
+                            friendWriterActivity.add(mFriendsCompleteNames.get(i) + " wrote a review of " + reviewHashFirebase.get("RestaurantName"));
                             allActivityIDs.add(reviewHashFirebase.get("ReviewID"));
                             allActivityHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
                         }
                     }
                 }
-                ListAdapter adapter = adapter(friendWriterNames);
+                ListAdapter adapter = adapter(friendWriterActivity);
                 listView.setAdapter(adapter);
-                findCheckin(mFriendsCompleteIDs, friendWriterNames, allActivityIDs, allActivityHash);
-                Log.d("testtex1", "test");
-
+                findCheckIn(mFriendsCompleteIDs, friendWriterActivity, allActivityIDs, allActivityHash);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
     }
 
 
-    public void findCheckin(final ArrayList<String> friends, final ArrayList<String> activity, final ArrayList<String> allActivityIDs, HashMap<String, HashMap<String, String>> allActivityHash){
+    public void findCheckIn(final ArrayList<String> friends, final ArrayList<String> activity, final ArrayList<String> allActivityIDs, HashMap<String, HashMap<String, String>> allActivityHash){
 
         mRefCheckins.addValueEventListener(new ValueEventListener() {
-            long currentTime = System.currentTimeMillis();
             //Database listener which fires when the database changes and counts reviews.
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -134,34 +133,25 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     HashMap<String, HashMap> checkinHashFirebase = (HashMap<String, HashMap>) child.getValue();
                     Object[] keys = checkinHashFirebase.keySet().toArray();
-                    Log.d("TEST0", checkinHashFirebase.toString());
 
-                    for (int i = 0; i < keys.length; i++) {
-
-                        String key = (String) keys[i];
-
-                        HashMap<String, String> checkinInfoHash = checkinHashFirebase.get(key);
-
-                        Log.d("Hashmap", checkinHashFirebase.toString());
+                    for (Object key1 : keys) {
+                        String key = (String) key1;
+                        HashMap checkinInfoHash = checkinHashFirebase.get(key);
 
                         for (int z = 0; z < friends.size(); z++) {
                             String friend_id = friends.get(z);
 
                             if (key.equals(friend_id)) {
-                                Log.d("successs", "found checkin");
                                 friendCheckInNames.add(mFriendsCompleteNames.get(z) + " checked in at " + checkinInfoHash.get("RestaurantName"));
                                 allActivityIDs.add(key);
                                 FriendsListActivity.this.allActivityHash.put(key, checkinInfoHash);
                             }
                         }
-                        List<String> newList = new ArrayList<String>(activity);
+                        List<String> newList = new ArrayList<>(activity);
                         newList.addAll(friendCheckInNames);
                         ListAdapter adapter = adapter(newList);
                         listView.setAdapter(adapter);
-                        Log.d("testtext", "test");
-
                     }
-
                 }
             }
 
@@ -178,6 +168,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 String ID = allActivityIDs.get(position);
                 String text = adapterView.getItemAtPosition(position).toString();
+
                 if (text.contains("review")){
                     Integer position1 = mFriendsCompleteIDs.indexOf(allActivityHash.get(ID).get("Writer"));
                     String nameWriter = mFriendsCompleteNames.get(position1);
@@ -186,7 +177,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                     getNameScreen.putExtra("nameWriter", nameWriter);
                     startActivity(getNameScreen);
                 }
-                if (text.contains("checked")){
+                else if (text.contains("checked")){
                     Intent intent = new Intent(getApplicationContext(),SelectedRestaurantActivity.class);
                     intent.putExtra("restaurantName", allActivityHash.get(ID).get("RestaurantName"));
                     intent.putExtra("restaurantID", allActivityHash.get(ID).get("RestaurantID"));

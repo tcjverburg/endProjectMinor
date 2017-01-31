@@ -1,24 +1,21 @@
 package nl.mprog.friendsandfood;
 
 import android.os.AsyncTask;
-import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * Created by Gebruiker on 31-1-2017.
+ * //source: https://www.youtube.com/watch?v=Gyaay7OTy-w
+
  */
 
-public class MyAsyncTask extends AsyncTask<String, String, String> {
+class MyAsyncTask extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {
@@ -35,9 +32,9 @@ public class MyAsyncTask extends AsyncTask<String, String, String> {
 
             reader = new BufferedReader(new InputStreamReader(stream));
 
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
 
-            String line = "";
+            String line;
 
             //adds line by line to the buffer from the api
             while ((line = reader.readLine()) != null) {
@@ -45,8 +42,6 @@ public class MyAsyncTask extends AsyncTask<String, String, String> {
             }
             return buffer.toString();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -69,12 +64,5 @@ public class MyAsyncTask extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        Log.d("RESULTT", result);
-        try {
-            JSONObject json = new JSONObject(result);
-            //parseLocationResult(json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 }

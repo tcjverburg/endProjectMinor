@@ -50,10 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "FacebookLogin";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    // [END declare_auth_listener]
-
     private CallbackManager mCallbackManager;
-
     private String rawdata;
 
     @Override
@@ -62,14 +59,10 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
+        //onCreate kleiner maken ?
 
-
-        // [START initialize_auth]
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
 
-        // [START auth_state_listener]
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -77,12 +70,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+
                     if (rawdata != null) {
                         Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
                         saveFriendsToFirebase(rawdata);
                         startActivity(intent);
                         updateUI(user);
-                        finish();
                     }
                     else {
                         signOut();
@@ -91,14 +84,10 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // [START_EXCLUDE]
-                // [END_EXCLUDE]
+
             }
         };
-        // [END auth_state_listener]
 
-        // [START initialize_fb_login]
-        // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
@@ -131,31 +120,23 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
-                // [START_EXCLUDE]
                 updateUI(null);
-                // [END_EXCLUDE]
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
-                // [START_EXCLUDE]
                 updateUI(null);
-                // [END_EXCLUDE]
             }
         });
-        // [END initialize_fb_login]
     }
 
-    // [START on_start_add_listener]
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
-    // [END on_start_add_listener]
 
-    // [START on_stop_remove_listener]
     @Override
     public void onStop() {
         super.onStop();
@@ -163,10 +144,7 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-    // [END on_stop_remove_listener]
 
-
-    // [START on_activity_result]
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -174,13 +152,9 @@ public class LoginActivity extends AppCompatActivity {
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
-    // [END on_activity_result]
 
-    // [START auth_with_facebook]
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
-        // [START_EXCLUDE silent]
-        // [END_EXCLUDE]
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -201,17 +175,15 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-    // [END auth_with_facebook]
 
     public void saveFriendsToFirebase(String rawData){
         String profile = Profile.getCurrentProfile().getId();
 
-        //Firebase database, database reference and authentication.
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRefFriends = database.getReference("users").child(profile).child("friends");
         ArrayList<String> friends = new ArrayList<String>();
         JSONArray friendslist;
-// Dit bij login doen, dan hier weer uitlezen uit Firebase met datasnapshot
+
         try {
             friendslist = new JSONArray(rawData);
             for (int l=0; l < friendslist.length(); l++) {

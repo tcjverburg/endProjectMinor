@@ -5,7 +5,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -32,29 +31,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static nl.mprog.friendsandfood.AppConfig.GEOMETRY;
-import static nl.mprog.friendsandfood.AppConfig.ICON;
 import static nl.mprog.friendsandfood.AppConfig.LATITUDE;
 import static nl.mprog.friendsandfood.AppConfig.LOCATION;
 import static nl.mprog.friendsandfood.AppConfig.LONGITUDE;
 import static nl.mprog.friendsandfood.AppConfig.NAME;
 import static nl.mprog.friendsandfood.AppConfig.OK;
 import static nl.mprog.friendsandfood.AppConfig.PLACE_ID;
-import static nl.mprog.friendsandfood.AppConfig.REFERENCE;
 import static nl.mprog.friendsandfood.AppConfig.STATUS;
-import static nl.mprog.friendsandfood.AppConfig.SUPERMARKET_ID;
 import static nl.mprog.friendsandfood.AppConfig.TAG;
-import static nl.mprog.friendsandfood.AppConfig.VICINITY;
 import static nl.mprog.friendsandfood.AppConfig.ZERO_RESULTS;
 
 // Source:https://www.androidtutorialpoint.com/intermediate/android-map-app-showing-current-location-android/
@@ -173,12 +162,24 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-        new JSONTask().execute("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ location.getLatitude() + "," + location.getLongitude()+ "&radius=1000&type=restaurant&key=AIzaSyDMXpcFcn3qN59rHEKWLdA2_dA6FeVEnTU");
         //stop location updates
+        getJsonResult("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ location.getLatitude() + "," + location.getLongitude()+ "&radius=1000&type=restaurant&key=AIzaSyDMXpcFcn3qN59rHEKWLdA2_dA6FeVEnTU");
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
 
+    }
+
+    public void getJsonResult(String query) {
+        //gets data with long plot for display
+        MyAsyncTask asyncTask = new MyAsyncTask();
+        try {
+            String result = asyncTask.execute(query).get();
+            JSONObject json = new JSONObject(result);
+            parseLocationResult(json);
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -252,71 +253,10 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         }
     }
 
-    //source: https://www.youtube.com/watch?v=Gyaay7OTy-w
-    //connecting tot the api and returning string with all the information about the particular movie or an error
-    public class JSONTask extends AsyncTask<String, String, String> {
 
-        @Override
-        protected String doInBackground(String... params) {
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-
-            //tries to make connection if possible
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-                InputStream stream = connection.getInputStream();
-
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-                StringBuffer buffer = new StringBuffer();
-
-                String line = "";
-
-                //adds line by line to the buffer from the api
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-                return buffer.toString();
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-            return null;
-        }
-
-        //filters the string we got as a result of the method getting the information from the api
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            Log.d("RESULTT", result);
-            try {
-                JSONObject json = new JSONObject(result);
-                parseLocationResult(json);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     private void parseLocationResult(JSONObject result) {
 
-        String id, place_id, placeName = null, reference, icon, vicinity = null;
+        String place_id, placeName = null;
         double latitude, longitude;
 
         try {
@@ -328,20 +268,16 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject place = jsonArray.getJSONObject(i);
 
-                    id = place.getString(SUPERMARKET_ID);
                     place_id = place.getString(PLACE_ID);
                     if (!place.isNull(NAME)) {
                         placeName = place.getString(NAME);
                     }
-                    if (!place.isNull(VICINITY)) {
-                        vicinity = place.getString(VICINITY);
-                    }
+
                     latitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
                             .getDouble(LATITUDE);
                     longitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
                             .getDouble(LONGITUDE);
-                    reference = place.getString(REFERENCE);
-                    icon = place.getString(ICON);
+
                     restaurantMap.put(placeName, place_id);
 
                     MarkerOptions markerOptions = new MarkerOptions();

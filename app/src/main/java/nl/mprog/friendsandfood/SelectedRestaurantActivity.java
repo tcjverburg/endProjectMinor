@@ -13,7 +13,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,18 +31,18 @@ import java.util.Map;
 
 public class SelectedRestaurantActivity extends BaseActivity implements View.OnClickListener{
     ListView listViewCheckIn;
-
     ListView listViewRatingBar;
     CustomAdapterRatingBar customAdapter;
     List<Review> reviewList;
 
     String restaurantID;
     String restaurantName;
+
     DatabaseReference mRefFriends;
     DatabaseReference mRefReviews;
     DatabaseReference mRefCheckins;
     DatabaseReference mRefActivity;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    FirebaseDatabase database;
     ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
     ArrayList<String> mFriendsID = new ArrayList<>();
     ArrayList<String> allReviewIDs = new ArrayList<String>();
@@ -61,16 +60,12 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_restaurant);
 
-
-        listViewRatingBar = (ListView)findViewById(R.id.listViewReviewFriends);
-
-
-
         Intent intent = getIntent();
         restaurantName = intent.getStringExtra("restaurantName");
         restaurantID = intent.getStringExtra("restaurantID");
         ratingBar = (RatingBar)findViewById(R.id.ratingBar);
 
+        listViewRatingBar = (ListView)findViewById(R.id.listViewReviewFriends);
 
         TextView name = (TextView) findViewById(R.id.selected_restaurant_name);
         findViewById(R.id.submit).setOnClickListener(this);
@@ -79,11 +74,37 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         listViewCheckIn = (ListView) findViewById(R.id.listViewCheckIn);
 
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        database = FirebaseDatabase.getInstance();
         mRefFriends = database.getReference("users").child(profile).child("friends");
         mRefCheckins =  database.getReference("checkin").child(restaurantID);
         mRefActivity = database.getReference("users").child(profile).child("activity");
 
+        mainValueEventListener();
+        clickSelectReviewFriend();
+        setToggleButton();
+
+    }
+
+    public void setToggleButton(){
+        toggle = (ToggleButton) findViewById(R.id.toggleButton);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    String time = String.valueOf(System.currentTimeMillis());
+                    Map<String, Object> activityInfo = new HashMap<>();
+                    activityInfo.put("Time", time);
+                    activityInfo.put("RestaurantName", restaurantName);
+                    activityInfo.put("RestaurantID", restaurantID);
+                    activityInfo.put("User", profile);
+                    mRefCheckins.child(profile).setValue(activityInfo);
+                } else {
+                    mRefCheckins.child(profile).removeValue();
+                }
+            }
+        });
+    }
+
+    public void mainValueEventListener(){
         mRefFriends.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
             @Override
@@ -101,25 +122,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-        clickSelectReviewFriend();
-
-        toggle = (ToggleButton) findViewById(R.id.toggleButton);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    String time = String.valueOf(System.currentTimeMillis());
-                    Map<String, Object> activityInfo = new HashMap<>();
-                    activityInfo.put("Time", time);
-                    activityInfo.put("RestaurantName", restaurantName);
-                    activityInfo.put("RestaurantID", restaurantID);
-                    activityInfo.put("User", profile);
-                    mRefCheckins.child(profile).setValue(activityInfo);
-                } else {
-                    mRefCheckins.child(profile).removeValue();
-                }
             }
         });
     }
@@ -180,8 +182,10 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
 
                     for (int z = 0; z < friends.size(); z++) {
                         String friend_id = friends.get(z);
+
                         if (checkinHashFirebase.get("User") != null ) {
                             String user = String.valueOf(checkinHashFirebase.get("User"));
+                            
                             if (user.equals(friend_id)) {
                                 friendCheckIn.add(mFriendsCompleteNames.get(z));
                             }
@@ -189,13 +193,11 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                                 toggle.setChecked(true);
                             }
                         }
-
                     }
                     ListAdapter adapter = adapter(friendCheckIn);
                     listViewCheckIn.setAdapter(adapter);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
