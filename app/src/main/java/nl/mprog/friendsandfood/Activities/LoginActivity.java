@@ -53,6 +53,8 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
     private LoginButton loginButton;
     private String rawData;
+    private ArrayList<String> friends = new ArrayList<String>();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -181,16 +183,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void saveFriendsToFirebase(String rawData){
-        String profile = Profile.getCurrentProfile().getId();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRefFriends = database.getReference("users").child(profile).child("friends");
-        ArrayList<String> friends = new ArrayList<String>();
-        JSONArray friendslist;
+        DatabaseReference myRefFriends = database.getReference("users").child(Profile.getCurrentProfile().getId()).child("friends");
+        JSONArray friendsList;
         try {
-            friendslist = new JSONArray(rawData);
-            for (int l=0; l < friendslist.length(); l++) {
-                friends.add(friendslist.getJSONObject(l).getString("name"));
-                myRefFriends.child(friendslist.getJSONObject(l).getString("id")).setValue(friendslist.getJSONObject(l).getString("name"));
+            friendsList = new JSONArray(rawData);
+            for (int l=0; l < friendsList.length(); l++) {
+                friends.add(friendsList.getJSONObject(l).getString("name"));
+                myRefFriends.child(friendsList.getJSONObject(l).getString("id")).setValue(friendsList.getJSONObject(l).getString("name"));
             }
         } catch (JSONException e) {
             e.printStackTrace();

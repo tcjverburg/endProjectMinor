@@ -95,17 +95,21 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     String time = String.valueOf(System.currentTimeMillis());
-                    Map<String, Object> activityInfo = new HashMap<>();
-                    activityInfo.put("Time", time);
-                    activityInfo.put("RestaurantName", restaurantName);
-                    activityInfo.put("RestaurantID", restaurantID);
-                    activityInfo.put("User", profile);
-                    mRefCheckins.child(profile).setValue(activityInfo);
+                    mRefCheckins.child(profile).setValue(createHashToggle(time));
                 } else {
                     mRefCheckins.child(profile).removeValue();
                 }
             }
         });
+    }
+
+    public Map<String, Object> createHashToggle(String time){
+        Map<String, Object> activityInfo = new HashMap<>();
+        activityInfo.put("Time", time);
+        activityInfo.put("RestaurantName", restaurantName);
+        activityInfo.put("RestaurantID", restaurantID);
+        activityInfo.put("User", profile);
+        return activityInfo;
     }
 
     public void mainValueEventListener(){
@@ -117,17 +121,20 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     String friendName = child.getValue().toString();
                     String friendID = child.getKey();
-
-                    mFriendsCompleteNames.add(friendName);
-                    mFriendsID.add(friendID);
-                    findReviews(mFriendsID);
-                    findCheckin(mFriendsID);
+                    addFriendInformation(friendName, friendID);
                 }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    public void addFriendInformation(String friendName, String friendID){
+        mFriendsCompleteNames.add(friendName);
+        mFriendsID.add(friendID);
+        findReviews(mFriendsID);
+        findCheckin(mFriendsID);
     }
 
     public void findReviews(final ArrayList<String> friends){
