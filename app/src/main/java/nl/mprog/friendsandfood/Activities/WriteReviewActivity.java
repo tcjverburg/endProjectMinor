@@ -47,14 +47,15 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_review);
 
+        Intent intent = getIntent();
+        restaurantID = intent.getStringExtra("restaurantID");
+        restaurantName = intent.getStringExtra("restaurantName");
+
         findViewById(R.id.btnSubmitReview).setOnClickListener(this);
         ratingBar = (RatingBar)findViewById(R.id.ratingBar);
         editText = (EditText) findViewById(R.id.edit_text_review);
         TextView infoReview = (TextView)findViewById(R.id.write_restaurant_info);
 
-        Intent intent = getIntent();
-        restaurantID = intent.getStringExtra("restaurantID");
-        restaurantName = intent.getStringExtra("restaurantName");
         infoReview.setText(restaurantName);
 
         //Firebase database, database reference and authentication.
@@ -71,9 +72,7 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
             //Database listener which fires when the database changes and counts reviews.
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 ArrayList<String> oldReviews = new ArrayList<>();
-
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     String oldSearchTerm = child.getValue().toString();
                     oldReviews.add(oldSearchTerm);

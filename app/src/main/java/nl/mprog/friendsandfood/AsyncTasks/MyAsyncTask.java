@@ -5,7 +5,6 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,6 +18,7 @@ import java.net.URL;
  */
 
 public class MyAsyncTask extends AsyncTask<String, String, String> {
+    private String line;
 
     /** Tries to make connection with the API and returns the result in String form. */
     @Override
@@ -32,7 +32,6 @@ public class MyAsyncTask extends AsyncTask<String, String, String> {
             connection.connect();
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder buffer = new StringBuilder();
-            String line;
             while ((line = reader.readLine()) != null) {
                 buffer.append(line);
             }
