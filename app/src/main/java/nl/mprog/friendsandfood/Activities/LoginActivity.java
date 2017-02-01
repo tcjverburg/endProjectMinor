@@ -97,15 +97,12 @@ public class LoginActivity extends AppCompatActivity {
 
     public void requestGraph(){
         new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/me/friends",
-                null,
-                HttpMethod.GET,
+                AccessToken.getCurrentAccessToken(), "/me/friends",
+                null, HttpMethod.GET,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
                         try {
-                            JSONArray rawName = response.getJSONObject().getJSONArray("data");
-                            rawData = rawName.toString();
+                            rawData = response.getJSONObject().getJSONArray("data").toString();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -164,20 +161,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
     }
