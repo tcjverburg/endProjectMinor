@@ -130,7 +130,9 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                         for (int z = 0; z < friends.size(); z++) {
                             String friend_id = friends.get(z);
                             if (key.equals(friend_id)) {
-                                friendCheckInNames.add(mFriendsCompleteNames.get(z) + " checked in at " + checkInInfoHash.get("RestaurantName"));
+                                String userName = mFriendsCompleteNames.get(z);
+                                String restName = (String) checkInInfoHash.get("RestaurantName");
+                                friendCheckInNames.add(userName + " checked in at " + restName);
                                 allActivityIDs.add(key);
                                 FriendsListActivity.this.allActivityHash.put(key, checkInInfoHash);
                             }
