@@ -32,29 +32,29 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCsHjs_jwTfSMNO_JlKz_Yr1T1AcqfWFdA"/>
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".Activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FriendsListActivity"
+        <activity android:name=".Activities.FriendsListActivity"
             android:label="List with friends"
             />
-        <activity android:name=".NearRestaurantActivity"
+        <activity android:name=".Activities.NearRestaurantActivity"
             android:label="Restaurants near user"
             />
-        <activity android:name=".ReadReviewActivity"
+        <activity android:name=".Activities.ReadReviewActivity"
             android:label="Read reviews"
             />
-        <activity android:name=".SelectedRestaurantActivity"
+        <activity android:name=".Activities.SelectedRestaurantActivity"
             android:label="Information about selected restaurant"
             />
-        <activity android:name=".WriteReviewActivity"
+        <activity android:name=".Activities.WriteReviewActivity"
             android:label="Write a review about a restaurant you have been."
             />
-        <activity android:name=".YourReviewsActivity"
+        <activity android:name=".Activities.YourReviewsActivity"
             android:label="List of your own reviews"
             />
     </application>

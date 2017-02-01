@@ -1,4 +1,4 @@
-package nl.mprog.friendsandfood;
+package nl.mprog.friendsandfood.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import nl.mprog.friendsandfood.R;
 
 /**
  * Created by Gebruiker on 12-1-2017.

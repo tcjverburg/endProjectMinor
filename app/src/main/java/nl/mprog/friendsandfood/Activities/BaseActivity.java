@@ -1,4 +1,4 @@
-package nl.mprog.friendsandfood;
+package nl.mprog.friendsandfood.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import nl.mprog.friendsandfood.R;
 
 /**
  * Created by Gebruiker on 18-1-2017.

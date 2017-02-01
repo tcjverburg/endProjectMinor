@@ -1,4 +1,4 @@
-package nl.mprog.friendsandfood;
+package nl.mprog.friendsandfood.Rest;
 
 /**
  * Created by Gebruiker on 16-1-2017.

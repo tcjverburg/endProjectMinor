@@ -1,4 +1,4 @@
-package nl.mprog.friendsandfood;
+package nl.mprog.friendsandfood.Adapters;
 
 import android.content.Context;
 import android.view.View;
@@ -8,6 +8,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.List;
+
+import nl.mprog.friendsandfood.R;
+import nl.mprog.friendsandfood.Classes.Review;
 
 /**
  * Created by Gebruiker on 30-1-2017.

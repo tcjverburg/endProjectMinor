@@ -1,4 +1,4 @@
-package nl.mprog.friendsandfood;
+package nl.mprog.friendsandfood.Classes;
 
 /**
  * Created by Gebruiker on 30-1-2017.

@@ -1,4 +1,4 @@
-package nl.mprog.friendsandfood;
+package nl.mprog.friendsandfood.Activities;
 
 
 import android.Manifest;
@@ -36,16 +36,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import static nl.mprog.friendsandfood.AppConfig.GEOMETRY;
-import static nl.mprog.friendsandfood.AppConfig.LATITUDE;
-import static nl.mprog.friendsandfood.AppConfig.LOCATION;
-import static nl.mprog.friendsandfood.AppConfig.LONGITUDE;
-import static nl.mprog.friendsandfood.AppConfig.NAME;
-import static nl.mprog.friendsandfood.AppConfig.OK;
-import static nl.mprog.friendsandfood.AppConfig.PLACE_ID;
-import static nl.mprog.friendsandfood.AppConfig.STATUS;
-import static nl.mprog.friendsandfood.AppConfig.TAG;
-import static nl.mprog.friendsandfood.AppConfig.ZERO_RESULTS;
+import nl.mprog.friendsandfood.Rest.MyAsyncTask;
+import nl.mprog.friendsandfood.R;
+
+import static nl.mprog.friendsandfood.Rest.AppConfig.GEOMETRY;
+import static nl.mprog.friendsandfood.Rest.AppConfig.LATITUDE;
+import static nl.mprog.friendsandfood.Rest.AppConfig.LOCATION;
+import static nl.mprog.friendsandfood.Rest.AppConfig.LONGITUDE;
+import static nl.mprog.friendsandfood.Rest.AppConfig.NAME;
+import static nl.mprog.friendsandfood.Rest.AppConfig.OK;
+import static nl.mprog.friendsandfood.Rest.AppConfig.PLACE_ID;
+import static nl.mprog.friendsandfood.Rest.AppConfig.STATUS;
+import static nl.mprog.friendsandfood.Rest.AppConfig.TAG;
+import static nl.mprog.friendsandfood.Rest.AppConfig.ZERO_RESULTS;
 
 // Source:https://www.androidtutorialpoint.com/intermediate/android-map-app-showing-current-location-android/
 // Source: https://www.youtube.com/watch?v=Gyaay7OTy-w

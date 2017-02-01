@@ -1,4 +1,4 @@
-package nl.mprog.friendsandfood;
+package nl.mprog.friendsandfood.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +34,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+
+import nl.mprog.friendsandfood.R;
 
 /**
  * LoginActivity.java

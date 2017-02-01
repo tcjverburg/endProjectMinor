@@ -1,4 +1,4 @@
-package nl.mprog.friendsandfood;
+package nl.mprog.friendsandfood.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import nl.mprog.friendsandfood.Adapters.CustomAdapterRatingBar;
+import nl.mprog.friendsandfood.R;
+import nl.mprog.friendsandfood.Classes.Review;
 
 /**
  * Created by Gebruiker on 12-1-2017.
