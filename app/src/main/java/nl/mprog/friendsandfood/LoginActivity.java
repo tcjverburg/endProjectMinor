@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private CallbackManager mCallbackManager;
+    private LoginButton loginButton;
     private String rawdata;
 
     @Override
@@ -59,43 +60,21 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
-        //onCreate kleiner maken ?
-
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-
-                    if (rawdata != null) {
-                        Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
-                        saveFriendsToFirebase(rawdata);
-                        startActivity(intent);
-                        updateUI(user);
-                    }
-                    else {
-                        signOut();
-                    }
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-
-            }
-        };
-
-        mCallbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
+
+        //onCreate kleiner maken ?
+        setListener();
+        callBackManager();
+    }
+
+    public void callBackManager(){
+        mCallbackManager = CallbackManager.Factory.create();
+
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult login_result) {
                 findViewById(R.id.login_button).setVisibility(View.INVISIBLE);
-
                 Log.d(TAG, "facebook:onSuccess:" + login_result);
                 handleFacebookAccessToken(login_result.getAccessToken());
                 new GraphRequest(
@@ -114,9 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                 ).executeAsync();
-
             }
-
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
@@ -129,6 +106,34 @@ public class LoginActivity extends AppCompatActivity {
                 updateUI(null);
             }
         });
+
+    }
+
+    public void setListener(){
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+
+                    if (rawdata != null) {
+                        Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
+                        saveFriendsToFirebase(rawdata);
+                        startActivity(intent);
+                        updateUI(user);
+                    } else {
+                        signOut();
+                    }
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
     }
 
     @Override
@@ -178,12 +183,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public void saveFriendsToFirebase(String rawData){
         String profile = Profile.getCurrentProfile().getId();
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRefFriends = database.getReference("users").child(profile).child("friends");
         ArrayList<String> friends = new ArrayList<String>();
         JSONArray friendslist;
-
         try {
             friendslist = new JSONArray(rawData);
             for (int l=0; l < friendslist.length(); l++) {

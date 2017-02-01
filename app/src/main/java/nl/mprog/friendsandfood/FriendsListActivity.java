@@ -168,20 +168,22 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 String ID = allActivityIDs.get(position);
                 String text = adapterView.getItemAtPosition(position).toString();
-
                 if (text.contains("review")){
+
                     Integer position1 = mFriendsCompleteIDs.indexOf(allActivityHash.get(ID).get("Writer"));
                     String nameWriter = mFriendsCompleteNames.get(position1);
                     Intent getNameScreen = new Intent(getApplicationContext(),ReadReviewActivity.class);
                     getNameScreen.putExtra("reviewHash", allActivityHash.get(ID));
                     getNameScreen.putExtra("nameWriter", nameWriter);
                     startActivity(getNameScreen);
-                }
-                else if (text.contains("checked")){
+                    finish();
+                } else if (text.contains("checked")){
+
                     Intent intent = new Intent(getApplicationContext(),SelectedRestaurantActivity.class);
                     intent.putExtra("restaurantName", allActivityHash.get(ID).get("RestaurantName"));
                     intent.putExtra("restaurantID", allActivityHash.get(ID).get("RestaurantID"));
                     startActivity(intent);
+                    finish();
                 }
             }
         });

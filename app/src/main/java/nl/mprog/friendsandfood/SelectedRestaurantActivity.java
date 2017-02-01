@@ -185,7 +185,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
 
                         if (checkinHashFirebase.get("User") != null ) {
                             String user = String.valueOf(checkinHashFirebase.get("User"));
-                            
+
                             if (user.equals(friend_id)) {
                                 friendCheckIn.add(mFriendsCompleteNames.get(z));
                             }
