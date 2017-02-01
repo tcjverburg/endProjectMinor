@@ -39,8 +39,8 @@ public class BaseActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
         mainListener();
     }
-    
-    //The listener which starts the LoginActivity if the user is logged out.
+
+    /** The listener which starts the LoginActivity if the user is logged out. */
     public void mainListener(){
          mAuthListener = new FirebaseAuth.AuthStateListener() {
 
@@ -59,15 +59,17 @@ public class BaseActivity extends AppCompatActivity {
              }
          };
      }
+
+    /** Creates actionbar and adds the logout button. */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        //
         getSupportActionBar().setTitle(R.string.app_name);
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
-    //Calls signOut() if sign out item is selected in the action bar.
+    /** Calls signOut() if sign out item is selected in the action bar. */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

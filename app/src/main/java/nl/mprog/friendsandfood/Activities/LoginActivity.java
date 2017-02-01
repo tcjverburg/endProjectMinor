@@ -43,7 +43,8 @@ import nl.mprog.friendsandfood.R;
  *
  * Starting activity in which the user has to login or create a new account using an email address.
  *
- * source:https://github.com/firebase/quickstart-android/blob/master/auth/app/src/main/java/com/google/firebase/quickstart/auth/EmailPasswordActivity.java
+ * source:https://github.com/firebase/quickstart-android/blob/master/auth/app/src/main
+ * /java/com/google/firebase/quickstart/auth/EmailPasswordActivity.java
  */
 
 public class LoginActivity extends AppCompatActivity {
@@ -62,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
-        //Setting LoginButton and permissions for User Facebook data.
+        //Setting LoginButton and permissions for user Facebook data.
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
 
@@ -72,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void callBackManager(){
         mCallbackManager = CallbackManager.Factory.create();
-
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult login_result) {
@@ -86,7 +86,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "facebook:onCancel");
                 updateUI(null);
             }
-
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
@@ -115,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void setListener(){
         mAuth = FirebaseAuth.getInstance();
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -123,7 +121,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-
                     if (rawData != null) {
                         Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
                         saveFriendsToFirebase(rawData);

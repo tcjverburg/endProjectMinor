@@ -42,9 +42,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     private String restaurantID;
     private String restaurantName;
 
-    private DatabaseReference mRefFriends;
-    private DatabaseReference mRefReviews;
-    private DatabaseReference mRefCheckins;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();;
     private ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
     private ArrayList<String> mFriendsID = new ArrayList<>();
@@ -82,6 +79,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     }
 
     public void setToggleButton(){
+        final DatabaseReference mRefCheckins =  database.getReference("checkin").child(restaurantID);
         toggle = (ToggleButton) findViewById(R.id.toggleButton);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -105,7 +103,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     }
 
     public void mainValueEventListener(){
-        mRefFriends = database.getReference("users").child(profile).child("friends");
+        DatabaseReference mRefFriends = database.getReference("users").child(profile).child("friends");
         mRefFriends.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
             @Override
@@ -131,7 +129,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     }
 
     public void findReviews(final ArrayList<String> friends){
-        mRefReviews =  database.getReference("reviews");
+        DatabaseReference mRefReviews =  database.getReference("reviews");
         listener = mRefReviews.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
             ArrayList<String> friendWriterNames = new ArrayList<String>();
@@ -165,7 +163,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     }
 
     public void findCheckin(final ArrayList<String> friends){
-        mRefCheckins =  database.getReference("checkin").child(restaurantID);
+        DatabaseReference mRefCheckins =  database.getReference("checkin").child(restaurantID);
         mRefCheckins.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
 
@@ -201,9 +199,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             }
         });}
 
-
-
-
     public ListAdapter adapter(ArrayList<String> arrayList){
         //Returns arrayAdapter for list view.
         return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
@@ -222,7 +217,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         listViewRatingBar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
                 Review review = (Review) adapterView.getAdapter().getItem(position);
                 String nameWriter = review.getWriter();
                 String reviewID = allReviewIDs.get(position);
@@ -244,7 +238,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             intent.putExtra("restaurantID", restaurantID);
             intent.putExtra("restaurantName", restaurantName);
             startActivity(intent);
-            mRefReviews.removeEventListener(listener);
         }
     }
 }

@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,25 +22,21 @@ import java.util.List;
 import nl.mprog.friendsandfood.R;
 
 /**
- * Created by Gebruiker on 11-1-2017.
- * needs to be edited
+ * Created by Tom Verburg on 11-1-2017.
+ * Shows all the Activity of your Friends, whether they checked in at a restaurant or left a
+ * review.
  */
 
 public class FriendsListActivity extends BaseActivity implements View.OnClickListener{
 
     private ListView listView;
-
     private ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
     private ArrayList<String> mFriendsCompleteIDs = new ArrayList<>();
     private ArrayList<String> friendWriterActivity = new ArrayList<>();
     private ArrayList<String> friendCheckInNames = new ArrayList<>();
     private ArrayList<String> allActivityIDs = new ArrayList<>();
     private HashMap<String, HashMap<String, String>> allActivityHash = new HashMap<>();
-
-    private DatabaseReference mRefFriends;
-    private DatabaseReference  mRefCheckins;
-
-    private FirebaseDatabase database;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
     @Override
@@ -52,11 +47,6 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.restaurants_nav).setOnClickListener(this);
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
         listView = (ListView) findViewById(R.id.listViewFriends);
-
-        String profile = Profile.getCurrentProfile().getId();
-        database = FirebaseDatabase.getInstance();
-        mRefFriends = database.getReference("users").child(profile).child("friends");
-        mRefCheckins =  database.getReference("checkin");
 
         mainValueEventListener();
         clickSelect();
@@ -70,6 +60,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         Nav.setBackgroundColor(myColor);
     }
     public void mainValueEventListener(){
+        DatabaseReference mRefFriends = database.getReference("users").child(getProfile()).child("friends");
         mRefFriends.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -97,16 +88,12 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
 
         mRefReviews.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
-
                     for (int i = 0; i < friends.size(); i++) {
                         String friend_id = friends.get(i);
-
                         if (reviewHashFirebase.get("Writer").equals(friend_id)){
                             friendWriterActivity.add(mFriendsCompleteNames.get(i) + " wrote a review of " + reviewHashFirebase.get("RestaurantName"));
                             allActivityIDs.add(reviewHashFirebase.get("ReviewID"));
@@ -116,7 +103,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                 }
                 ListAdapter adapter = adapter(friendWriterActivity);
                 listView.setAdapter(adapter);
-                findCheckIn(mFriendsCompleteIDs, friendWriterActivity, allActivityIDs, allActivityHash);
+                findCheckIn(mFriendsCompleteIDs, friendWriterActivity, allActivityIDs);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -125,28 +112,26 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
     }
 
 
-    public void findCheckIn(final ArrayList<String> friends, final ArrayList<String> activity, final ArrayList<String> allActivityIDs, HashMap<String, HashMap<String, String>> allActivityHash){
-
+    public void findCheckIn(final ArrayList<String> friends,
+                            final ArrayList<String> activity,
+                            final ArrayList<String> allActivityIDs){
+        DatabaseReference mRefCheckins =  database.getReference("checkin");
         mRefCheckins.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     HashMap<String, HashMap> checkinHashFirebase = (HashMap<String, HashMap>) child.getValue();
                     Object[] keys = checkinHashFirebase.keySet().toArray();
-
                     for (Object key1 : keys) {
                         String key = (String) key1;
-                        HashMap checkinInfoHash = checkinHashFirebase.get(key);
-
+                        HashMap checkInInfoHash = checkinHashFirebase.get(key);
                         for (int z = 0; z < friends.size(); z++) {
                             String friend_id = friends.get(z);
-
                             if (key.equals(friend_id)) {
-                                friendCheckInNames.add(mFriendsCompleteNames.get(z) + " checked in at " + checkinInfoHash.get("RestaurantName"));
+                                friendCheckInNames.add(mFriendsCompleteNames.get(z) + " checked in at " + checkInInfoHash.get("RestaurantName"));
                                 allActivityIDs.add(key);
-                                FriendsListActivity.this.allActivityHash.put(key, checkinInfoHash);
+                                FriendsListActivity.this.allActivityHash.put(key, checkInInfoHash);
                             }
                         }
                         List<String> newList = new ArrayList<>(activity);
@@ -156,10 +141,8 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                     }
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });}
 
