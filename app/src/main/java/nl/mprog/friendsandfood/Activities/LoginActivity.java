@@ -41,7 +41,11 @@ import nl.mprog.friendsandfood.R;
  * LoginActivity.java
  * TomVerburg-OwnProject
  *
- * Starting activity in which the user has to login or create a new account using an email address.
+ * Starting activity in which the user has to login. This is different based on whether the user has
+ * the Facebook application installed on their phone and whether they are signed in. If not signed
+ * in or not having the app at all, the user has to manually enter their Facebook username/e-mail
+ * and password to use the application. If the user has the app installed and is logged in, the
+ * user only has to click the Login button.
  *
  * source:https://github.com/firebase/quickstart-android/blob/master/auth/app/src/main
  * /java/com/google/firebase/quickstart/auth/EmailPasswordActivity.java
@@ -71,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         callBackManager();
     }
 
+    //*CallbackManager which manages the Facebook Login, information retrieval and updates the UI.*/
     public void callBackManager(){
         mCallbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -94,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //* Requests Facebook user friends information.*/
     public void requestGraph(){
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -112,6 +118,8 @@ public class LoginActivity extends AppCompatActivity {
         ).executeAsync();
     }
 
+    //* mAuth listener which updates the UI and starts the next activity based on the login
+    // status of the user.*/
     public void setListener(){
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -141,6 +149,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        updateUI(null);
     }
 
     @Override
@@ -151,14 +160,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    //* Passes the activity result back to the Facebook SDK.*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    //* Tries to get the Facebook AccessToken. */
     private void handleFacebookAccessToken(AccessToken token) {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -174,27 +183,33 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    //* Once login is successful, the friends list of the user is saved to Firebase for later
+    // retrieval*/
     public void saveFriendsToFirebase(String rawData){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRefFriends = database.getReference("users").child(Profile.getCurrentProfile().getId()).child("friends");
+        DatabaseReference myRefFriends = database.getReference("users").child(Profile
+                .getCurrentProfile().getId()).child("friends");
         JSONArray friendsList;
         try {
             friendsList = new JSONArray(rawData);
             for (int l=0; l < friendsList.length(); l++) {
                 friends.add(friendsList.getJSONObject(l).getString("name"));
-                myRefFriends.child(friendsList.getJSONObject(l).getString("id")).setValue(friendsList.getJSONObject(l).getString("name"));
+                myRefFriends.child(friendsList.getJSONObject(l).getString("id"))
+                        .setValue(friendsList.getJSONObject(l).getString("name"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    //* Signs the user out. */
     public void signOut() {
         mAuth.signOut();
         LoginManager.getInstance().logOut();
         updateUI(null);
     }
 
+    //* Updates the UI based on the status of the user. */
     private void updateUI(FirebaseUser user) {
         if (user == null) {
             findViewById(R.id.login_button).setVisibility(View.VISIBLE);

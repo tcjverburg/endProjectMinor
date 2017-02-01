@@ -17,4 +17,6 @@
     <string name="checked_out">Check in!</string>
     <string name="checked_in">Check out</string>
     <string name="review_from">"Review from "</string>
+    <string name="checked_in_at">" checked in at "</string>
+    <string name="wrote_review_of">" wrote a review of "</string>
 </resources>

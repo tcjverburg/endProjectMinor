@@ -11,7 +11,7 @@ import java.util.HashMap;
 import nl.mprog.friendsandfood.R;
 
 /**
- * Created by Gebruiker on 12-1-2017.
+ * Created by Tom Verburg on 12-1-2017.
  * a
  */
 

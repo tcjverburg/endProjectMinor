@@ -63,9 +63,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
     private Marker mCurrLocationMarker;
-    private LocationRequest mLocationRequest;
     private Map<String, String> restaurantMap = new HashMap<>();
 
     @Override
@@ -84,20 +82,22 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        setMapFragment();
+    }
+
+    /** Obtain the SupportMapFragment and get notified when the map is ready to be used. */
+
+    public void setMapFragment(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        //mapFragment.getView().setVisibility(View.INVISIBLE);
         mapFragment.getMapAsync(this);
-
     }
+
     /**
      * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * This callback is triggered when the map is ready to be used. If Google Play services is not
+     * installed on the device, the user will be prompted to install it inside the
+     * SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
     @Override
@@ -128,13 +128,13 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         mGoogleApiClient.connect();
     }
 
+    /** Sets the LocationRequest settings after connection is made to the API. */
     @Override
     public void onConnected(Bundle bundle) {
 
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
-
 
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ContextCompat.checkSelfPermission(this,
@@ -150,31 +150,38 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
 
     }
 
+    /**
+     * After the user location is found or changed, this method is called. It centers the map on
+     * the user and generates a query to the Google Places API to get information about nearby
+     * restaurants.
+     * */
     @Override
     public void onLocationChanged(Location location) {
 
-        mLastLocation = location;
+        Location mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
-
-        //Place current location marker
+        //Place current location marker.
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        //move map camera
+        //Moves map camera to users current location.
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-        //stop location updates
-        getJsonResult("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ location.getLatitude() + "," + location.getLongitude()+ "&radius=1000&type=restaurant&key=AIzaSyDMXpcFcn3qN59rHEKWLdA2_dA6FeVEnTU");
+        //Stops location updates, otherwise quota will be
+        getJsonResult("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+
+                location.getLatitude() + "," + location.getLongitude()+
+                "&radius=1000&type=restaurant&key=AIzaSyDMXpcFcn3qN59rHEKWLdA2_dA6FeVEnTU");
+
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
 
     }
 
+    /** Gets the JSON result from the query. */
     public void getJsonResult(String query) {
-        //gets data with long plot for display
         MyAsyncTask asyncTask = new MyAsyncTask();
         try {
             String result = asyncTask.execute(query).get();
@@ -190,6 +197,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
 
     }
 
+    /** Gets permission from user to get the user location.*/
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
@@ -200,15 +208,10 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
                 //Prompt the user once explanation has been shown
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
-
 
             } else {
                 // No explanation needed, we can request the permission.
@@ -222,6 +225,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         }
     }
 
+    /** Processes the permissions given by the user, and builds the api client. */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -231,8 +235,6 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted. Do the
-                    // contacts-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
@@ -244,19 +246,16 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
                     }
 
                 } else {
-
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
                 return;
             }
-
-            // other 'case' lines to check for other permissions this app might request.
-            // You can add here other case statements according to your requirement.
         }
     }
 
-
+    /** Processes the query result, so various markers can be set on the map and information
+     * is processed, selected and saved for later use. */
     private void parseLocationResult(JSONObject result) {
 
         String place_id, placeName = null;
@@ -293,6 +292,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         }
     }
 
+    /** Adds markers to the map for all restaurants which were found. */
     public void addMarkers(String placeName, String place_id, double latitude, double longitude){
         restaurantMap.put(placeName, place_id);
         MarkerOptions markerOptions = new MarkerOptions();
@@ -303,6 +303,8 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         mMap.setOnMarkerClickListener(this);
     }
 
+    /** Opens SelectedRestaurantActivtity when a marker is selected and shows information of
+     * the selected restaurant. */
     @Override
     public boolean onMarkerClick(Marker marker) {
         Log.i("GoogleMapActivity", "onMarkerClick");
@@ -313,6 +315,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         return false;
     }
 
+    /** On click method for the navigation bar and other buttons.*/
     @Override
     public void onClick(View v) {
         //On click method for the navigation bar and other buttons.

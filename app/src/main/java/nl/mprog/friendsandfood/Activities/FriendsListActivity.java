@@ -24,7 +24,8 @@ import nl.mprog.friendsandfood.R;
 /**
  * Created by Tom Verburg on 11-1-2017.
  * Shows all the Activity of your Friends, whether they checked in at a restaurant or left a
- * review.
+ * review. Both these type of activities are put in a ListView and when the user clicks it, they
+ * are either directed to the restaurant their friend checked in, or the review their friend wrote.
  */
 
 public class FriendsListActivity extends BaseActivity implements View.OnClickListener{
@@ -44,23 +45,25 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
 
+        //Views
         findViewById(R.id.restaurants_nav).setOnClickListener(this);
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
         listView = (ListView) findViewById(R.id.listViewFriends);
 
-        mainValueEventListener();
-        clickSelect();
+        getUserFriendsValueEventListener();
+        clickSelectActivityFriend();
         setColorButton();
     }
 
+    /** Sets the color of the navigation button of current activity. */
     public void setColorButton(){
-        //Sets the color of the navigation button of current activity.
         ImageButton Nav = (ImageButton)findViewById(R.id.friends_nav);
         int myColor = getResources().getColor(R.color.colorButtonPressed);
         Nav.setBackgroundColor(myColor);
     }
 
-    public void mainValueEventListener(){
+    /** First EventListener which gets all the friends of the user and calls findFriendReviews. */
+    public void getUserFriendsValueEventListener(){
         DatabaseReference mRefFriends = database.getReference("users").child(getProfile()).child("friends");
         mRefFriends.addValueEventListener(new ValueEventListener() {
             @Override
@@ -70,7 +73,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                     String friendID = child.getKey();
                     addFriendInformation(friendName, friendID);
                 }
-                findReviews(mFriendsCompleteIDs);
+                findFriendReviews(mFriendsCompleteIDs);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -78,25 +81,27 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
+    /** Saves data of friends in ArrayLists. */
     public void addFriendInformation(String friendName, String friendID){
         mFriendsCompleteNames.add(friendName);
         mFriendsCompleteIDs.add(friendID);
     }
 
-    public void findReviews(final ArrayList<String> friends){
+    /** Saves data of friends in ArrayLists. */
+    public void findFriendReviews(final ArrayList<String> friends){
         DatabaseReference mRefReviews = database.getReference("reviews");
         mRefReviews.addValueEventListener(new ValueEventListener() {
-            //Database listener which fires when the database changes and counts reviews.
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
-                    HashMap<String,String> reviewHashFirebase = (HashMap<String, String>)child.getValue();
+                    HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
                     for (int i = 0; i < friends.size(); i++) {
                         String friend_id = friends.get(i);
                         if (reviewHashFirebase.get("Writer").equals(friend_id)){
+                            //Saves information of the review if it was written by a friend.
                             String userName = mFriendsCompleteNames.get(i);
                             String restName = reviewHashFirebase.get("RestaurantName");
-                            friendWriterActivity.add(userName + " wrote a review of " + restName);
+                            friendWriterActivity.add(userName + getString(R.string.wrote_review_of) + restName);
                             allActivityIDs.add(reviewHashFirebase.get("ReviewID"));
                             allActivityHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
                         }
@@ -104,7 +109,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                 }
                 ListAdapter adapter = adapter(friendWriterActivity);
                 listView.setAdapter(adapter);
-                findCheckIn(mFriendsCompleteIDs, friendWriterActivity);
+                findFriendCheckIn(mFriendsCompleteIDs, friendWriterActivity);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -112,12 +117,11 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
-
-    public void findCheckIn(final ArrayList<String> friends,
-                            final ArrayList<String> activity){
+    /** Finds all the current CheckIns of friends. */
+    public void findFriendCheckIn(final ArrayList<String> friends,
+                                  final ArrayList<String> activity){
         DatabaseReference mRefCheckins =  database.getReference("checkin");
         mRefCheckins.addValueEventListener(new ValueEventListener() {
-            //Database listener which fires when the database changes and counts reviews.
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -142,18 +146,22 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
-        });}
+        });
+    }
 
+    /** Gets all the information of a check in of a friend. */
     public void getFriendCheckinInfo(int z, HashMap checkInInfoHash, String key){
         String userName = mFriendsCompleteNames.get(z);
         String restName = (String) checkInInfoHash.get("RestaurantName");
-        FriendsListActivity.this.friendCheckInNames.add(userName + " checked in at " + restName);
-        FriendsListActivity.this.allActivityIDs.add(key);
-        FriendsListActivity.this.allActivityHash.put(key, checkInInfoHash);
+        friendCheckInNames.add(userName + getString(R.string.checked_in_at) + restName);
+        allActivityIDs.add(key);
+        allActivityHash.put(key, checkInInfoHash);
     }
 
-    public void clickSelect() {
-        //Starts SearchResultActivity after clicking a previous search term in the list view.
+    /** This onClickListener is for the ListView which contains the activity
+     * of your friends. Based on whether the user clicks on a list item containing a review message
+     * or a check in message, the user is directed to a new activity.*/
+    public void clickSelectActivityFriend() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -178,26 +186,23 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
+    /** Returns arrayAdapter for list view. */
     public ListAdapter adapter(List<String> arrayList){
-        //Returns arrayAdapter for list view.
         return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
     }
 
+    /** On click method for the navigation bar and other buttons.*/
     @Override
     public void onClick(View v) {
-        //On click method for the navigation bar and other buttons.
         int i = v.getId();
         if (i == R.id.own_reviews_nav) {
             Intent getNameScreen = new Intent(getApplicationContext(), YourReviewsActivity.class);
             startActivity(getNameScreen);
             finish();
-        }
-        else if (i == R.id.restaurants_nav) {
+        } else if (i == R.id.restaurants_nav) {
             Intent getNameScreen = new Intent(getApplicationContext(), NearRestaurantActivity.class);
             startActivity(getNameScreen);
             finish();
         }
     }
-
-
 }

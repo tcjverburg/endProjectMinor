@@ -80,6 +80,7 @@ public class BaseActivity extends AppCompatActivity {
         return (super.onOptionsItemSelected(item));
     }
 
+    /** Signs user out. */
     public void signOut() {
         mAuth.signOut();
         LoginManager.getInstance().logOut();
