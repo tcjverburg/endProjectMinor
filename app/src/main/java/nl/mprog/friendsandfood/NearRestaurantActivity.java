@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -60,10 +61,11 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
     private Marker mCurrLocationMarker;
-    private LocationRequest mLocationRequest;
     private Map<String, String> restaurantMap = new HashMap<>();
+    public NearRestaurantActivity(Marker mCurrLocationMarker) {
+        this.mCurrLocationMarker = mCurrLocationMarker;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +130,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     @Override
     public void onConnected(Bundle bundle) {
 
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
 
@@ -150,7 +152,6 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     @Override
     public void onLocationChanged(Location location) {
 
-        mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
@@ -183,7 +184,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
@@ -221,7 +222,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -245,7 +246,6 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
-                return;
             }
 
             // other 'case' lines to check for other permissions this app might request.

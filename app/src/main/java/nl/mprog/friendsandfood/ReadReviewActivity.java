@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 /**
  * Created by Gebruiker on 12-1-2017.
+ * a
  */
 
 public class ReadReviewActivity extends BaseActivity {
@@ -27,7 +28,7 @@ public class ReadReviewActivity extends BaseActivity {
         TextView nameRestaurant = (TextView)findViewById(R.id.restaurant_name);
         RatingBar rBar = (RatingBar) findViewById(R.id.ratingBarReadReview);
 
-        header.setText("Review from " + nameWriter);
+        header.setText(String.format("%s%s", getString(R.string.review_from), nameWriter));
         nameRestaurant.setText(hashMap.get("RestaurantName"));
         text.setText(hashMap.get("Text"));
         rBar.setRating(Float.valueOf(String.valueOf(hashMap.get("Rating"))));

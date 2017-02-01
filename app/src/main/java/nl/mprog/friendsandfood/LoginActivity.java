@@ -77,22 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                 findViewById(R.id.login_button).setVisibility(View.INVISIBLE);
                 Log.d(TAG, "facebook:onSuccess:" + login_result);
                 handleFacebookAccessToken(login_result.getAccessToken());
-                new GraphRequest(
-                        AccessToken.getCurrentAccessToken(),
-                        "/me/friends",
-                        null,
-                        HttpMethod.GET,
-                        new GraphRequest.Callback() {
-                            public void onCompleted(GraphResponse response) {
-                                try {
-                                    JSONArray rawName = response.getJSONObject().getJSONArray("data");
-                                    rawdata = rawName.toString();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                ).executeAsync();
+                requestGraph();
             }
             @Override
             public void onCancel() {
@@ -106,7 +91,25 @@ public class LoginActivity extends AppCompatActivity {
                 updateUI(null);
             }
         });
+    }
 
+    public void requestGraph(){
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/friends",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        try {
+                            JSONArray rawName = response.getJSONObject().getJSONArray("data");
+                            rawdata = rawName.toString();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
     }
 
     public void setListener(){
