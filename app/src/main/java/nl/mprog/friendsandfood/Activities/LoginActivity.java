@@ -97,8 +97,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public void requestGraph(){
         new GraphRequest(
-                AccessToken.getCurrentAccessToken(), "/me/friends",
-                null, HttpMethod.GET,
+                AccessToken.getCurrentAccessToken(),
+                "/me/friends",
+                null,
+                HttpMethod.GET,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
                         try {

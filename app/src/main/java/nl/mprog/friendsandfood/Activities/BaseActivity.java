@@ -31,33 +31,34 @@ public class BaseActivity extends AppCompatActivity {
     private static final String TAG = "Base";
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         user = mAuth.getCurrentUser();
-
-        //The listener which starts the LoginActivity if the user is logged out.
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                }
-                else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                    Intent getNameScreen = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(getNameScreen);
-                }
-            }
-        };
+        mainListener();
     }
+    
+    //The listener which starts the LoginActivity if the user is logged out.
+    public void mainListener(){
+         mAuthListener = new FirebaseAuth.AuthStateListener() {
 
+             @Override
+             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                 if (user != null) {
+                     // User is signed in
+                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                 }
+                 else {
+                     // User is signed out
+                     Log.d(TAG, "onAuthStateChanged:signed_out");
+                     Intent getNameScreen = new Intent(getApplicationContext(), LoginActivity.class);
+                     startActivity(getNameScreen);
+                 }
+             }
+         };
+     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
