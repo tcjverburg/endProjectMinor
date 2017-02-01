@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Profile;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,17 +56,11 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
         TextView infoReview = (TextView)findViewById(R.id.write_restaurant_info);
 
         infoReview.setText(restaurantName);
-
-        //Firebase database, database reference and authentication.
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
-        myRefReviews = database.getReference("reviews");
-
         getReviewCount();
-
     }
 
     public void getReviewCount(){
+        myRefReviews = database.getReference("reviews");
         myRefReviews.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
             @Override

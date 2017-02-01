@@ -11,7 +11,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,17 +30,19 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
     ListView listView;
     DatabaseReference mRefReviews;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    String profile = Profile.getCurrentProfile().getId();
+
     ArrayList<String> allReviewIDs = new ArrayList<String>();
+    ArrayList<String> restaurants = new ArrayList<String>();
+
     HashMap<String,HashMap> allReviewsHash = new HashMap<String, HashMap>();
     ValueEventListener listener;
+
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_review);
-        ArrayList<String> restaurants = new ArrayList<String>();
         findViewById(R.id.restaurants_nav).setOnClickListener(this);
         findViewById(R.id.friends_nav).setOnClickListener(this);
 
@@ -49,16 +50,18 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, restaurants); // simple text view for list item
         listView.setAdapter(adapter);
 
-        //Sets the color of the navigation button of current activity.
-        ImageButton Nav = (ImageButton)findViewById(R.id.own_reviews_nav);
-        int myColor = getResources().getColor(R.color.colorButtonPressed);
-        Nav.setBackgroundColor(myColor);
-
+        setButtonColor();
         getOwnReviews();
         clickSelectedReview();
         clickDeleteReview();
     }
 
+    public void setButtonColor(){
+        //Sets the color of the navigation button of current activity.
+        ImageButton Nav = (ImageButton)findViewById(R.id.own_reviews_nav);
+        int myColor = getResources().getColor(R.color.colorButtonPressed);
+        Nav.setBackgroundColor(myColor);
+    }
 
     public void getOwnReviews(){
 
@@ -72,7 +75,7 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
-                    if (reviewHashFirebase.get("Writer").equals(profile)){
+                    if (reviewHashFirebase.get("Writer").equals(getProfile())){
                         ownReviews.add(reviewHashFirebase.get("RestaurantName"));
                         allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
                         allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);

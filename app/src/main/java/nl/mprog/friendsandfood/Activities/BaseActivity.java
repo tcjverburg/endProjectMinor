@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +26,7 @@ import nl.mprog.friendsandfood.R;
 
 public class BaseActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    private String profile = Profile.getCurrentProfile().getId();
     private FirebaseUser user;
     private static final String TAG = "Base";
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -94,4 +96,10 @@ public class BaseActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+    public String getProfile(){
+        return profile;
+    }
+
+
 }
