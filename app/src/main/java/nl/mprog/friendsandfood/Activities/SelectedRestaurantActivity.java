@@ -46,7 +46,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     private ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
     private ArrayList<String> mFriendsID = new ArrayList<>();
     private ArrayList<String> allReviewIDs = new ArrayList<String>();
-    private HashMap<String,HashMap> allReviewsHash = new HashMap<String, HashMap>();
+    private HashMap<String, HashMap<String, String>> allReviewsHash = new HashMap<String, HashMap<String, String>>();
     private ValueEventListener listener;
     private RatingBar ratingBar;
     final String profile = Profile.getCurrentProfile().getId();
@@ -134,7 +134,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             //Database listener which fires when the database changes and counts reviews.
             ArrayList<String> friendWriterNames = new ArrayList<String>();
             int totalscore = 0;
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 reviewList = new ArrayList<>();
@@ -144,13 +143,9 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                         String friend_id = friends.get(i).toString();
                         if (reviewHashFirebase.get("Writer").equals(friend_id) &
                                 reviewHashFirebase.get("RestaurantID").equals(restaurantID)){
-                                friendWriterNames.add(mFriendsCompleteNames.get(i));
-                                allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
-                                allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
-                                totalscore += Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")));;
-                                reviewList.add(new Review(mFriendsCompleteNames.get(i),
-                                        reviewHashFirebase.get("ReviewID"),
-                                        Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")))));
+                                friendWriterNames = addFriendReviewInformation(friendWriterNames,
+                                        reviewHashFirebase, i);
+                                totalscore += Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")));
                         }
                     }
                     if (friendWriterNames.size() != 0){
@@ -165,24 +160,31 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         });
     }
 
+    public ArrayList<String> addFriendReviewInformation(ArrayList<String> friendWriterNames,
+                                                        HashMap<String, String> reviewHashFirebase,
+                                                        int i){
+        friendWriterNames.add(mFriendsCompleteNames.get(i));
+        allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
+        allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
+        reviewList.add(new Review(mFriendsCompleteNames.get(i),
+                reviewHashFirebase.get("ReviewID"),
+                Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")))));
+        return friendWriterNames;
+    }
+
     public void findCheckin(final ArrayList<String> friends){
         DatabaseReference mRefCheckins =  database.getReference("checkin").child(restaurantID);
         mRefCheckins.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> friendCheckIn = new ArrayList<String>();
-
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     HashMap<String, HashMap> checkinHashFirebase = (HashMap<String, HashMap>) child.getValue();
-
                     for (int z = 0; z < friends.size(); z++) {
                         String friend_id = friends.get(z);
-
                         if (checkinHashFirebase.get("User") != null ) {
                             String user = String.valueOf(checkinHashFirebase.get("User"));
-
                             if (user.equals(friend_id)) {
                                 friendCheckIn.add(mFriendsCompleteNames.get(z));
                             }
@@ -213,8 +215,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         listViewRatingBar.setAdapter(customAdapter);
     }
 
-
-
     public void clickSelectReviewFriend() {
         //Starts SearchResultActivity after clicking a previous search term in the list view.
         listViewRatingBar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -223,7 +223,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                 Review review = (Review) adapterView.getAdapter().getItem(position);
                 String nameWriter = review.getWriter();
                 String reviewID = allReviewIDs.get(position);
-                HashMap selectedReviewHash = allReviewsHash.get(reviewID);
+                HashMap<String, String> selectedReviewHash = allReviewsHash.get(reviewID);
                 Intent getNameScreen = new Intent(getApplicationContext(),ReadReviewActivity.class);
                 getNameScreen.putExtra("reviewHash", selectedReviewHash);
                 getNameScreen.putExtra("nameWriter", nameWriter);
