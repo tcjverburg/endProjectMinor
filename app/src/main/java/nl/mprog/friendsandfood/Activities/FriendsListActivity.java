@@ -104,7 +104,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                 }
                 ListAdapter adapter = adapter(friendWriterActivity);
                 listView.setAdapter(adapter);
-                findCheckIn(mFriendsCompleteIDs, friendWriterActivity, allActivityIDs);
+                findCheckIn(mFriendsCompleteIDs, friendWriterActivity);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -114,8 +114,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
 
 
     public void findCheckIn(final ArrayList<String> friends,
-                            final ArrayList<String> activity,
-                            final ArrayList<String> allActivityIDs){
+                            final ArrayList<String> activity){
         DatabaseReference mRefCheckins =  database.getReference("checkin");
         mRefCheckins.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
@@ -130,11 +129,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                         for (int z = 0; z < friends.size(); z++) {
                             String friend_id = friends.get(z);
                             if (key.equals(friend_id)) {
-                                String userName = mFriendsCompleteNames.get(z);
-                                String restName = (String) checkInInfoHash.get("RestaurantName");
-                                friendCheckInNames.add(userName + " checked in at " + restName);
-                                allActivityIDs.add(key);
-                                FriendsListActivity.this.allActivityHash.put(key, checkInInfoHash);
+                                getFriendCheckinInfo(z, checkInInfoHash, key);
                             }
                         }
                         List<String> newList = new ArrayList<>(activity);
@@ -148,6 +143,14 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
             public void onCancelled(DatabaseError databaseError) {
             }
         });}
+
+    public void getFriendCheckinInfo(int z, HashMap checkInInfoHash, String key){
+        String userName = mFriendsCompleteNames.get(z);
+        String restName = (String) checkInInfoHash.get("RestaurantName");
+        FriendsListActivity.this.friendCheckInNames.add(userName + " checked in at " + restName);
+        FriendsListActivity.this.allActivityIDs.add(key);
+        FriendsListActivity.this.allActivityHash.put(key, checkInInfoHash);
+    }
 
     public void clickSelect() {
         //Starts SearchResultActivity after clicking a previous search term in the list view.
