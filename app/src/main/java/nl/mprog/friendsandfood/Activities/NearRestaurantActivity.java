@@ -265,9 +265,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         try {
             JSONArray jsonArray = result.getJSONArray("results");
             if (result.getString(STATUS).equalsIgnoreCase(OK)) {
-
                 mMap.clear();
-
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject place = jsonArray.getJSONObject(i);
 
@@ -275,25 +273,14 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
                     if (!place.isNull(NAME)) {
                         placeName = place.getString(NAME);
                     }
-
                     latitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
                             .getDouble(LATITUDE);
                     longitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
                             .getDouble(LONGITUDE);
-
-                    restaurantMap.put(placeName, place_id);
-
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    LatLng latLng = new LatLng(latitude, longitude);
-                    markerOptions.position(latLng);
-                    markerOptions.title(placeName);
-                    mMap.addMarker(markerOptions);
-                    mMap.setOnMarkerClickListener(this);
+                    addMarkers(placeName, place_id, latitude, longitude);
                 }
-
                 Toast.makeText(getBaseContext(), jsonArray.length() + " Restaurants found!",
                         Toast.LENGTH_LONG).show();
-
             } else if (result.getString(STATUS).equalsIgnoreCase(ZERO_RESULTS)) {
                 Toast.makeText(getBaseContext(), "No Restaurants found in 1KM radius!!!",
                         Toast.LENGTH_LONG).show();
@@ -304,6 +291,16 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
             e.printStackTrace();
             Log.e(TAG, "parseLocationResult: Error=" + e.getMessage());
         }
+    }
+
+    public void addMarkers(String placeName, String place_id, double latitude, double longitude){
+        restaurantMap.put(placeName, place_id);
+        MarkerOptions markerOptions = new MarkerOptions();
+        LatLng latLng = new LatLng(latitude, longitude);
+        markerOptions.position(latLng);
+        markerOptions.title(placeName);
+        mMap.addMarker(markerOptions);
+        mMap.setOnMarkerClickListener(this);
     }
 
     @Override

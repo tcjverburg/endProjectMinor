@@ -2,7 +2,8 @@ package nl.mprog.friendsandfood.Classes;
 
 /**
  * Created by Tom Verburg on 27-1-2017.
- * This class
+ * This is the Review class which creates a Review Object to be used in the listView
+ * of the SelectedRestaurantActivity.
  */
 
 public class Review {
@@ -10,33 +11,24 @@ public class Review {
     private String reviewID;
     private Float rating;
 
+    /**Constructor of the Review class.*/
     public Review(String writer, String reviewID, Float rating) {
         this.writer = writer;
         this.reviewID = reviewID;
         this.rating = rating;
     }
 
+    /**All the getters of the Review class.*/
     public String getWriter() {
         return writer;
-    }
-
-    public void setWriter(String writer) {
-        this.writer = writer;
     }
 
     public String getReviewID() {
         return reviewID;
     }
 
-    public void setReviewID(String reviewID) {
-        this.reviewID = reviewID;
-    }
-
     public Float getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
-        this.rating = rating;
-    }
 }
