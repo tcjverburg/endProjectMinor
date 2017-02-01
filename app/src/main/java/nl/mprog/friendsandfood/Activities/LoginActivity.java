@@ -47,14 +47,12 @@ import nl.mprog.friendsandfood.R;
  */
 
 public class LoginActivity extends AppCompatActivity {
-
-
     private static final String TAG = "FacebookLogin";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private CallbackManager mCallbackManager;
     private LoginButton loginButton;
-    private String rawdata;
+    private String rawData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,10 +60,10 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
+        //Setting LoginButton and permissions for User Facebook data.
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
 
-        //onCreate kleiner maken ?
         setListener();
         callBackManager();
     }
@@ -105,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onCompleted(GraphResponse response) {
                         try {
                             JSONArray rawName = response.getJSONObject().getJSONArray("data");
-                            rawdata = rawName.toString();
+                            rawData = rawName.toString();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -125,9 +123,9 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
 
-                    if (rawdata != null) {
+                    if (rawData != null) {
                         Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
-                        saveFriendsToFirebase(rawdata);
+                        saveFriendsToFirebase(rawData);
                         startActivity(intent);
                         updateUI(user);
                     } else {

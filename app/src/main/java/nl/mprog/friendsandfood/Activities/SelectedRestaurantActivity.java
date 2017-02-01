@@ -77,11 +77,11 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         name.setText(restaurantName);
         listViewCheckIn = (ListView) findViewById(R.id.listViewCheckIn);
 
-
         database = FirebaseDatabase.getInstance();
         mRefFriends = database.getReference("users").child(profile).child("friends");
         mRefCheckins =  database.getReference("checkin").child(restaurantID);
         mRefActivity = database.getReference("users").child(profile).child("activity");
+        mRefReviews =  database.getReference("reviews");
 
         mainValueEventListener();
         clickSelectReviewFriend();
@@ -131,9 +131,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     }
 
     public void findReviews(final ArrayList<String> friends){
-
-        mRefReviews =  database.getReference("reviews");
-
         listener = mRefReviews.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
             ArrayList<String> friendWriterNames = new ArrayList<String>();
@@ -142,30 +139,24 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 reviewList = new ArrayList<>();
-
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
-
                     for (int i = 0; i < friends.size(); i++) {
                         String friend_id = friends.get(i).toString();
                         if (reviewHashFirebase.get("Writer").equals(friend_id) & reviewHashFirebase.get("RestaurantID").equals(restaurantID)){
                                 friendWriterNames.add(mFriendsCompleteNames.get(i));
                                 allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
                                 allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
-                                String rating = String.valueOf(reviewHashFirebase.get("Rating"));
-                                Float ratingFloat = Float.valueOf(rating);
-                                totalscore += ratingFloat;
-                                reviewList.add(new Review(mFriendsCompleteNames.get(i), reviewHashFirebase.get("ReviewID"), ratingFloat));
+                                totalscore += Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")));;
+                                reviewList.add(new Review(mFriendsCompleteNames.get(i), reviewHashFirebase.get("ReviewID"), Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")))));
                         }
                     }
                     if (friendWriterNames.size() != 0){
-                        float score = totalscore/(friendWriterNames.size());
-                        ratingBar.setRating(score);
+                        ratingBar.setRating(totalscore/(friendWriterNames.size()));
                     }
                     customAdapter(reviewList);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }

@@ -1,6 +1,7 @@
 package nl.mprog.friendsandfood.AsyncTasks;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,11 +26,11 @@ public class MyAsyncTask extends AsyncTask<String, String, String> {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         try {
+            Log.d("Connection", "Successful");
             URL url = new URL(params[0]);
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
-            InputStream stream = connection.getInputStream();
-            reader = new BufferedReader(new InputStreamReader(stream));
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder buffer = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
