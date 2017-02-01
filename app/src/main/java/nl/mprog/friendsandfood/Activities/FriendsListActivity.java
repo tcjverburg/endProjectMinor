@@ -59,6 +59,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         int myColor = getResources().getColor(R.color.colorButtonPressed);
         Nav.setBackgroundColor(myColor);
     }
+
     public void mainValueEventListener(){
         DatabaseReference mRefFriends = database.getReference("users").child(getProfile()).child("friends");
         mRefFriends.addValueEventListener(new ValueEventListener() {
@@ -83,19 +84,19 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void findReviews(final ArrayList<String> friends){
-
         DatabaseReference mRefReviews = database.getReference("reviews");
-
         mRefReviews.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
-                    HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
+                    HashMap<String,String> reviewHashFirebase = (HashMap<String, String>)child.getValue();
                     for (int i = 0; i < friends.size(); i++) {
                         String friend_id = friends.get(i);
                         if (reviewHashFirebase.get("Writer").equals(friend_id)){
-                            friendWriterActivity.add(mFriendsCompleteNames.get(i) + " wrote a review of " + reviewHashFirebase.get("RestaurantName"));
+                            String userName = mFriendsCompleteNames.get(i);
+                            String restName = reviewHashFirebase.get("RestaurantName");
+                            friendWriterActivity.add(userName + " wrote a review of " + restName);
                             allActivityIDs.add(reviewHashFirebase.get("ReviewID"));
                             allActivityHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
                         }
