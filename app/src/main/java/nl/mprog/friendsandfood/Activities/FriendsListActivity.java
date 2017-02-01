@@ -63,8 +63,8 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         database = FirebaseDatabase.getInstance();
         mRefFriends = database.getReference("users").child(profile).child("friends");
         mRefCheckins =  database.getReference("checkin");
-        mainValueEventListener();
 
+        mainValueEventListener();
         clickSelect();
 
     }
@@ -171,7 +171,6 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                 String ID = allActivityIDs.get(position);
                 String text = adapterView.getItemAtPosition(position).toString();
                 if (text.contains("review")){
-
                     Integer position1 = mFriendsCompleteIDs.indexOf(allActivityHash.get(ID).get("Writer"));
                     String nameWriter = mFriendsCompleteNames.get(position1);
                     Intent getNameScreen = new Intent(getApplicationContext(),ReadReviewActivity.class);
@@ -180,7 +179,6 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                     startActivity(getNameScreen);
                     finish();
                 } else if (text.contains("checked")){
-
                     Intent intent = new Intent(getApplicationContext(),SelectedRestaurantActivity.class);
                     intent.putExtra("restaurantName", allActivityHash.get(ID).get("RestaurantName"));
                     intent.putExtra("restaurantID", allActivityHash.get(ID).get("RestaurantID"));

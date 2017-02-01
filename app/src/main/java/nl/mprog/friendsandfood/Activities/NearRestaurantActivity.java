@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -36,19 +35,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import nl.mprog.friendsandfood.Rest.MyAsyncTask;
+import nl.mprog.friendsandfood.AsyncTasks.MyAsyncTask;
 import nl.mprog.friendsandfood.R;
 
-import static nl.mprog.friendsandfood.Rest.AppConfig.GEOMETRY;
-import static nl.mprog.friendsandfood.Rest.AppConfig.LATITUDE;
-import static nl.mprog.friendsandfood.Rest.AppConfig.LOCATION;
-import static nl.mprog.friendsandfood.Rest.AppConfig.LONGITUDE;
-import static nl.mprog.friendsandfood.Rest.AppConfig.NAME;
-import static nl.mprog.friendsandfood.Rest.AppConfig.OK;
-import static nl.mprog.friendsandfood.Rest.AppConfig.PLACE_ID;
-import static nl.mprog.friendsandfood.Rest.AppConfig.STATUS;
-import static nl.mprog.friendsandfood.Rest.AppConfig.TAG;
-import static nl.mprog.friendsandfood.Rest.AppConfig.ZERO_RESULTS;
+import static com.facebook.login.widget.ProfilePictureView.TAG;
+import static nl.mprog.friendsandfood.Classes.AppConfig.GEOMETRY;
+import static nl.mprog.friendsandfood.Classes.AppConfig.LATITUDE;
+import static nl.mprog.friendsandfood.Classes.AppConfig.LOCATION;
+import static nl.mprog.friendsandfood.Classes.AppConfig.LONGITUDE;
+import static nl.mprog.friendsandfood.Classes.AppConfig.NAME;
+import static nl.mprog.friendsandfood.Classes.AppConfig.OK;
+import static nl.mprog.friendsandfood.Classes.AppConfig.PLACE_ID;
+import static nl.mprog.friendsandfood.Classes.AppConfig.STATUS;
+import static nl.mprog.friendsandfood.Classes.AppConfig.ZERO_RESULTS;
 
 // Source:https://www.androidtutorialpoint.com/intermediate/android-map-app-showing-current-location-android/
 // Source: https://www.youtube.com/watch?v=Gyaay7OTy-w
@@ -64,11 +63,10 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
     private Marker mCurrLocationMarker;
+    private LocationRequest mLocationRequest;
     private Map<String, String> restaurantMap = new HashMap<>();
-    public NearRestaurantActivity(Marker mCurrLocationMarker) {
-        this.mCurrLocationMarker = mCurrLocationMarker;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +131,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     @Override
     public void onConnected(Bundle bundle) {
 
-        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
 
@@ -155,6 +153,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     @Override
     public void onLocationChanged(Location location) {
 
+        mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
@@ -187,7 +186,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
 
@@ -225,7 +224,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+                                           String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -249,6 +248,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
+                return;
             }
 
             // other 'case' lines to check for other permissions this app might request.

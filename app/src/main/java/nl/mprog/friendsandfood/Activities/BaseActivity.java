@@ -17,7 +17,10 @@ import com.google.firebase.auth.FirebaseUser;
 import nl.mprog.friendsandfood.R;
 
 /**
- * Created by Gebruiker on 18-1-2017.
+ * Created by Tom Verburg on 18-1-2017.
+ * Base activity which contains a listener which tracks whether a user is still logged in
+ * and returns the application to the LoginActivity if this is not the case. This class also
+ * contains various methods which are used more than once through different activities.
  */
 
 public class BaseActivity extends AppCompatActivity {
@@ -61,10 +64,10 @@ public class BaseActivity extends AppCompatActivity {
         return true;
     }
 
+    //Calls signOut() if sign out item is selected in the action bar.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            //Calls signOut() if sign out item is selected in the action bar.
             case R.id.sign_out:
                 signOut();
                 return (true);

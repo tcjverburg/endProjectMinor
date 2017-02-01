@@ -1,4 +1,4 @@
-package nl.mprog.friendsandfood.Rest;
+package nl.mprog.friendsandfood.AsyncTasks;
 
 import android.os.AsyncTask;
 
@@ -10,38 +10,32 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Gebruiker on 31-1-2017.
- * //source: https://www.youtube.com/watch?v=Gyaay7OTy-w
-
+ * Created by Tom Verburg on 31-1-2017.
+ * This class contains the AsyncTask to get a JSON String from the Google Places Api, based
+ * on the query which was generated in the NearRestaurantActivity.
+ *
+ * source: https://www.youtube.com/watch?v=Gyaay7OTy-w
  */
 
 public class MyAsyncTask extends AsyncTask<String, String, String> {
 
+    /** Tries to make connection with the API and returns the result in String form. */
     @Override
     protected String doInBackground(String... params) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
-
-        //tries to make connection if possible
         try {
             URL url = new URL(params[0]);
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
-
             InputStream stream = connection.getInputStream();
-
             reader = new BufferedReader(new InputStreamReader(stream));
-
             StringBuilder buffer = new StringBuilder();
-
             String line;
-
-            //adds line by line to the buffer from the api
             while ((line = reader.readLine()) != null) {
                 buffer.append(line);
             }
             return buffer.toString();
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -55,12 +49,11 @@ public class MyAsyncTask extends AsyncTask<String, String, String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
         return null;
     }
 
-    //filters the string we got as a result of the method getting the information from the api
+    /** Returns result in String. */
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);

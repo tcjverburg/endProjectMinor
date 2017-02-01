@@ -1,7 +1,8 @@
 package nl.mprog.friendsandfood.Classes;
 
 /**
- * Created by Gebruiker on 30-1-2017.
+ * Created by Tom Verburg on 27-1-2017.
+ * This class
  */
 
 public class Review {
