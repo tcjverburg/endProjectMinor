@@ -142,12 +142,15 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
                     for (int i = 0; i < friends.size(); i++) {
                         String friend_id = friends.get(i).toString();
-                        if (reviewHashFirebase.get("Writer").equals(friend_id) & reviewHashFirebase.get("RestaurantID").equals(restaurantID)){
+                        if (reviewHashFirebase.get("Writer").equals(friend_id) &
+                                reviewHashFirebase.get("RestaurantID").equals(restaurantID)){
                                 friendWriterNames.add(mFriendsCompleteNames.get(i));
                                 allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
                                 allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
                                 totalscore += Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")));;
-                                reviewList.add(new Review(mFriendsCompleteNames.get(i), reviewHashFirebase.get("ReviewID"), Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")))));
+                                reviewList.add(new Review(mFriendsCompleteNames.get(i),
+                                        reviewHashFirebase.get("ReviewID"),
+                                        Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")))));
                         }
                     }
                     if (friendWriterNames.size() != 0){
