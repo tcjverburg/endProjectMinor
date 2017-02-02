@@ -16,7 +16,7 @@ import static android.view.View.inflate;
 
 /**
  * Created by Tom Verburg on 30-1-2017.
- * This is a custom adapter for the SelectedRestaurantActivity so both the ListView and
+ * This is a custom simpleAdapter for the SelectedRestaurantActivity so both the ListView and
  * the RatingBar are shown in a single ListView item.
  */
 

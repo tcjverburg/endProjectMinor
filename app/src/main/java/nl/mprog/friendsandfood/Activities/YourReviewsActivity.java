@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -24,6 +23,7 @@ import nl.mprog.friendsandfood.R;
 
 /**
  * Created by Tom Verburg on 12-1-2017.
+ *
  * In this activity, the user is able to see his own reviews and read them by selecting them.
  * A review can also be deleted by long pressing it.
  */
@@ -79,7 +79,7 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
                         allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
                     }
                 }
-                ListAdapter adapter = adapter(ownReviews);
+                ListAdapter adapter = getAdapter(ownReviews);
                 listView.setAdapter(adapter);
             }
             @Override
@@ -138,8 +138,4 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    /** Returns arrayAdapter for list view. */
-     public ListAdapter adapter(ArrayList<String> arrayList){
-        return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
-    }
 }

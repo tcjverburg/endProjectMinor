@@ -12,19 +12,24 @@
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:id="@+id/map"
-        tools:context=".MapsActivity"
+        tools:context=".Activities.NearRestaurantActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
 
-    <ListView
-        android:id="@+id/listViewRestaurants"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        android:layout_weight="1"
-        />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/refresh"
+            android:layout_gravity="left|top"
+            android:src="@drawable/ic_autorenew_black_24dp"
+            android:padding="7.5dp"
+            android:background="@color/colorTransparentWhite"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp" />
+
+    </fragment>
 
     </LinearLayout>
 

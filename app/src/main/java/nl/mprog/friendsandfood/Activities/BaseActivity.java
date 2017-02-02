@@ -8,12 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.List;
 
 import nl.mprog.friendsandfood.R;
 
@@ -99,6 +103,11 @@ public class BaseActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    /** Returns arrayAdapter for list view. */
+    public ListAdapter getAdapter(List<String> arrayList){
+        return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
     }
 
     public String getProfile(){

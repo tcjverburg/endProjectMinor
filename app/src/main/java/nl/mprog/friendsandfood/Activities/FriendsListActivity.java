@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -52,7 +51,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
         listView = (ListView) findViewById(R.id.listViewFriends);
 
-        getUserFriendsValueEventListener();
+        getUserFriends();
         clickSelectActivityFriend();
         setColorButton();
     }
@@ -65,7 +64,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
     }
 
     /** First EventListener which gets all the friends of the user and calls findFriendReviews. */
-    public void getUserFriendsValueEventListener(){
+    public void getUserFriends(){
         DatabaseReference mRefFriends = database.getReference("users").child(getProfile()).child("friends");
         mRefFriends.addValueEventListener(new ValueEventListener() {
             @Override
@@ -111,7 +110,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                         }
                     }
                 }
-                ListAdapter adapter = adapter(friendWriterActivity);
+                ListAdapter adapter = getAdapter(friendWriterActivity);
                 listView.setAdapter(adapter);
                 findFriendCheckIn(mFriendsCompleteIDs, friendWriterActivity);
             }
@@ -143,7 +142,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                         }
                         List<String> newList = new ArrayList<>(activity);
                         newList.addAll(friendCheckInNames);
-                        ListAdapter adapter = adapter(newList);
+                        ListAdapter adapter = getAdapter(newList);
                         listView.setAdapter(adapter);
                     }
                 }
@@ -200,11 +199,6 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                 }
             }
         });
-    }
-
-    /** Returns arrayAdapter for list view. */
-    public ListAdapter adapter(List<String> arrayList){
-        return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
     }
 
     /** On click method for the navigation bar and other buttons.*/

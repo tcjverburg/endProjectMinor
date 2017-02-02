@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -26,11 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 import nl.mprog.friendsandfood.Adapters.CustomAdapterRatingBar;
-import nl.mprog.friendsandfood.R;
 import nl.mprog.friendsandfood.Classes.Review;
+import nl.mprog.friendsandfood.R;
 
 /**
  * Created by Tom Verburg on 12-1-2017.
+ *
  * In this activity, the user is presented will all the infomation about a selected restaurant.
  * Here, the user can see the name, rating by friends, reviews by friends and friends who have
  * checked in. The user themselves can navigate to WriteReviewActivity by clicking the WriteReview
@@ -132,7 +132,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         mFriendsCompleteNames.add(friendName);
         mFriendsID.add(friendID);
         findReviews(mFriendsID);
-        findCheckin(mFriendsID);
+        findFriendsCheckin(mFriendsID);
     }
 
     /** Finds all the reviews of friends from Firebase. */
@@ -182,7 +182,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     }
 
     /** Finds all the check ins of friends from Firebase. */
-    public void findCheckin(final ArrayList<String> friends){
+    public void findFriendsCheckin(final ArrayList<String> friends){
         DatabaseReference mRefCheckins =  database.getReference("checkin").child(restaurantID);
         mRefCheckins.addValueEventListener(new ValueEventListener() {
             @Override
@@ -203,7 +203,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                         }
                     }
                     listViewCheckIn = (ListView) findViewById(R.id.listViewCheckIn);
-                    ListAdapter adapter = adapter(friendCheckIn);
+                    ListAdapter adapter = getAdapter(friendCheckIn);
                     listViewCheckIn.setAdapter(adapter);
                 }
             }
@@ -212,11 +212,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
 
             }
         });}
-
-    /** Returns arrayAdapter for the first ListView. */
-    public ListAdapter adapter(ArrayList<String> arrayList){
-        return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
-    }
 
     /** Sets custom adapter for the second ListView. */
     public void customAdapter(List<Review> list){

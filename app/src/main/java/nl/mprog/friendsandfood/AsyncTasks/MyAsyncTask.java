@@ -14,7 +14,7 @@ import java.net.URL;
  * This class contains the AsyncTask to get a JSON String from the Google Places Api, based
  * on the query which was generated in the NearRestaurantActivity.
  *
- * source: https://www.youtube.com/watch?v=Gyaay7OTy-w
+ * https://github.com/hishamMuneer/JsonParsingDemo
  */
 
 public class MyAsyncTask extends AsyncTask<String, String, String> {

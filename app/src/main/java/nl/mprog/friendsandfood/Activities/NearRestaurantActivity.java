@@ -49,17 +49,25 @@ import static nl.mprog.friendsandfood.Classes.AppConfig.PLACE_ID;
 import static nl.mprog.friendsandfood.Classes.AppConfig.STATUS;
 import static nl.mprog.friendsandfood.Classes.AppConfig.ZERO_RESULTS;
 
-// Source:https://www.androidtutorialpoint.com/intermediate/android-map-app-showing-current-location-android/
-// Source: https://www.youtube.com/watch?v=Gyaay7OTy-w
-// Source: http://androidmastermind.blogspot.nl/2016/06/android-google-maps-with-nearyby-places.html
 
+/**
+ * NearRestaurantActivity.java
+ * TomVerburg-OwnProject
+ *
+ * In this Activity, the user is able to select restaurants near to his current location. By clicking
+ * on a marker on the map fragment shown, the user is then directed to SelectedRestaurantsActivivy
+ * where he can see more information about the selected restaurant.
+ *
+ * Source:https://www.androidtutorialpoint.com/intermediate/android-map-app-showing-current-location-android/
+ * Source: http://androidmastermind.blogspot.nl/2016/06/android-google-maps-with-nearyby-places.html
+ */
 
 public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
         GoogleMap.OnMarkerClickListener,
-        View.OnClickListener{
+        View.OnClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -74,25 +82,26 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         //Views.
         findViewById(R.id.friends_nav).setOnClickListener(this);
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
+        findViewById(R.id.refresh).setOnClickListener(this);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
         setMapFragment();
-        setColorNavigationButton();
+        setColorButton();
     }
 
     /** Obtain the SupportMapFragment and get notified when the map is ready to be used. */
 
-    public void setMapFragment(){
+    public void setMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
     /** Sets the color of the navigation button of current activity. */
-    public void setColorNavigationButton(){
-        ImageButton Nav = (ImageButton)findViewById(R.id.restaurants_nav);
+    public void setColorButton() {
+        ImageButton Nav = (ImageButton) findViewById(R.id.restaurants_nav);
         int myColor = getResources().getColor(R.color.colorButtonPressed);
         Nav.setBackgroundColor(myColor);
     }
@@ -116,13 +125,13 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
     }
 
+    /** Builds API client */
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -174,8 +183,8 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
         //Stops location updates, otherwise quota will be
-        getJsonResult("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+
-                location.getLatitude() + "," + location.getLongitude()+
+        getJsonResult("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
+                location.getLatitude() + "," + location.getLongitude() +
                 "&radius=1000&type=restaurant&key=AIzaSyDMXpcFcn3qN59rHEKWLdA2_dA6FeVEnTU");
 
         if (mGoogleApiClient != null) {
@@ -203,7 +212,8 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
 
     /** Gets permission from user to get the user location.*/
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public boolean checkLocationPermission(){
+
+    public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -297,7 +307,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     }
 
     /** Adds markers to the map for all restaurants which were found. */
-    public void addMarkers(String placeName, String place_id, double latitude, double longitude){
+    public void addMarkers(String placeName, String place_id, double latitude, double longitude) {
         restaurantMap.put(placeName, place_id);
         MarkerOptions markerOptions = new MarkerOptions();
         LatLng latLng = new LatLng(latitude, longitude);
@@ -312,7 +322,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     @Override
     public boolean onMarkerClick(Marker marker) {
         Log.i("GoogleMapActivity", "onMarkerClick");
-        Intent intent = new Intent(NearRestaurantActivity.this,SelectedRestaurantActivity.class);
+        Intent intent = new Intent(NearRestaurantActivity.this, SelectedRestaurantActivity.class);
         intent.putExtra("restaurantName", marker.getTitle());
         intent.putExtra("restaurantID", restaurantMap.get(marker.getTitle()));
         startActivity(intent);
@@ -327,8 +337,9 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         if (i == R.id.own_reviews_nav) {
             Intent getNameScreen = new Intent(getApplicationContext(), YourReviewsActivity.class);
             startActivity(getNameScreen);
-        }
-        else if (i == R.id.friends_nav) {
+        } else if (i == R.id.refresh) {
+            recreate();
+        } else if (i == R.id.friends_nav) {
             Intent getNameScreen = new Intent(getApplicationContext(), FriendsListActivity.class);
             startActivity(getNameScreen);
         }
