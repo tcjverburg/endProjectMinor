@@ -2,6 +2,7 @@
 ### Tom Verburg 10769633
 ### Test Facebook Email: test.programmeer@gmail.com
 ### Test Facebook Password: ProgramProj
+### Run on Device due to GPS
 
 ## Copyright
 Copyright (c) 2017 Verburg, Tom under the terms of the MIT license.
