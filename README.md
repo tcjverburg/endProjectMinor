@@ -10,9 +10,19 @@ Copyright (c) 2017 Verburg, Tom under the terms of the MIT license.
 When going out and one wishes to go out for diner, it is often tough choosing a restaurant. Even when you look up a specific restaurant, the ratings given will most likely be given by people you do not know or gave an anonymous rating. However, when someone you know recommends a specific restaurant, you are more likely to be convinced by their opinion and make a quick decision on where to eat. Therefore, I created an app which uses your geo location to see what restaurants are near, and by logging in with facebook sees if any of your facebook friends have been there and left a positive review or are even checked in at that moment. 
 
 
-## Visual Sketch
-<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_1.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_2.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_3.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_4.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_5.png" width=33%><img
-src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_6.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_7.png" width=33%>
+## Visual Aspects Application
+<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_1.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_2.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_3.png" width=33%>
+
+--------SelectedRestaurantActivity-------------------ReadReviewActivity-------------------YourReviewsActivity--------
+
+<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_4.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_5.png" width=33%><img
+src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_6.png" width=33%><img
+
+-----------WriteReviewActivity-----------------------FriendsFeedActivity-----------------NearRestaurantsActivity-------
+
+src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_7.png" width=33%>
+
+---------LoginActivity-------
 
 
 ## Data sets and sources
