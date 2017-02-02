@@ -25,7 +25,9 @@ FriendsFeedActivity shows you a list of all the activities your friends have don
 
 NearRestaurantActivity is the activity which shows the Map fragment. In the onCreate, all the permissions are checked for accessing and requesting the current location of the user . After  the map is created and the Google API client is built, the location is used to query Google Places API Webservice for restaurants near the user. The API then returns 20 of the most relevant restaurants in the radius of 1km of the user and adds them as locationmarks on the map. This is done immediately after the avtivity is created, so the result is that the user immediately sees a map with several markers. When the user clicks on one of the markers, the user is navigated to SelectedRestaurantActivity and this activity receives the ID of the selected restaurant using the intent. 
 
-In SelectedRestaurantActivity the ID is received from the intent and all the 
+In SelectedRestaurantActivity the ID is received from the intent of the previous activity and all the information is then read from firebase using this unique ID and the unique ID of every user. First, all the friends are retrieved from the firebase database again, but this time we scan for check ins and reviews which are also of the selected restaurant. The user will see the average rating given by all his friends of that restaurant, individual ratings of friends and friends who are checked in at that moment in time. All this information is retrieved from the Firebase Database. From here on, the user can click on a specific review and read that review in ReadReviewActivity or click on the write review button to go to WriteReviewActivity.
+
+In WriteReviewActivity the user can give a specific rating out of 5 and add a text. On the click of the button "Submit Review" the review is saved, the activity finished and the user is then returned to the SelectedRestaurantActivity. 
 
 
 ## Challenges
