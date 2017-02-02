@@ -21,4 +21,6 @@
     <string name="wrote_review_of">" wrote a review of "</string>
     <string name="review_submitted">Review submitted!</string>
     <string name="deleted_review">Deleted Review</string>
+    <string name="no_internet">No internet connection.</string>
+    <string name="auth_failed">Authentication failed.</string>
 </resources>

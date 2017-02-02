@@ -1,6 +1,9 @@
 package nl.mprog.friendsandfood.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -75,6 +78,8 @@ public class LoginActivity extends AppCompatActivity {
         callBackManager();
     }
 
+
+
     /**CallbackManager which manages the Facebook Login, information retrieval and updates the UI.*/
     public void callBackManager(){
         mCallbackManager = CallbackManager.Factory.create();
@@ -94,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
+                isNetworkAvailable();
                 updateUI(null);
             }
         });
@@ -176,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, R.string.auth_failed,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -220,5 +226,16 @@ public class LoginActivity extends AppCompatActivity {
             findViewById(R.id.login_button).setVisibility(View.VISIBLE);
         }
     }
+
+    //* Checks whether there is internet connection. */
+    private void isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo == null){
+            Toast.makeText(LoginActivity.this, R.string.no_internet,
+                    Toast.LENGTH_SHORT).show();
+        }
+   }
 
 }
