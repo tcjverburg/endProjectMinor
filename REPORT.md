@@ -1,6 +1,6 @@
 # Report
 
-<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/report_picture.png" width=33%>
+<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_6.png" width=33%>
 
 ----------NearRestaurantActivity----------
 
