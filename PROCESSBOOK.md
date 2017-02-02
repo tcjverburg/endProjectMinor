@@ -27,7 +27,7 @@ Today I was able to succesfully implement the Google Places API and get all the 
 Today I did not have that much time to work on the project, seeing as I had a lot of trouble getting to Amsterdam. However, I was able to save more data to Firebase and plan to find a way to read this data tomorrow. 
 
 ##Wednesday 18-01
-The plan for today was to finish the alpha seeing as the only real challenge ahead was reading the Firebase data and I succeeded in this. For tomorrow I do not have anything planned, except finishing the style sheet with my group.
+The plan for today was to finish the alpha seeing as the only real challenge ahead was reading the Firebase data and I succeeded in this. For tomorrow I do not have anything planned, except finishing the style sheet with my group. However, I keep on changing the entire structure of the database because I keep running into problems when I want to save and read unique events from various differenct activities. A lot of trial and error into getting this to work.
 
 ##Thursday 19-01
 Today I realized the main concept of the app which I wanted to make. However, seeing as I still have a couple of weeks to go, I wanted to add some extra features to expand my application. Seeing as the "Friends" tab doesnt have any functionality except showing a list of friends, I thought that it might be interesting to turn this tab into an activity wall feed, so the user can see what their friends are doing. Furthermore I was able to implement a checkin/checkout button to the selected restaurant tab. 
