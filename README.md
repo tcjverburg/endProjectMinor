@@ -11,8 +11,8 @@ When going out and one wishes to go out for diner, it is often tough choosing a 
 
 
 ## Visual Sketch
-<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Login%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Friends%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Read%20Review%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Restaurant%20Near%20User%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Selected%20Restaurant%20Activity.png" width=33%><img
-src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Write%20Review%20Activity.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/Your%20Reviews%20Activity.png" width=33%>
+<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_1.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_2.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_3.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_4.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_5.png" width=33%><img
+src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_6.png" width=33%><img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_7.png" width=33%>
 
 
 ## Data sets and sources
