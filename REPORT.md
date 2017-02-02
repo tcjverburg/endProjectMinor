@@ -27,7 +27,20 @@ NearRestaurantActivity is the activity which shows the Map fragment. In the onCr
 
 In SelectedRestaurantActivity the ID is received from the intent of the previous activity and all the information is then read from firebase using this unique ID and the unique ID of every user. First, all the friends are retrieved from the firebase database again, but this time we scan for check ins and reviews which are also of the selected restaurant. The user will see the average rating given by all his friends of that restaurant, individual ratings of friends and friends who are checked in at that moment in time. All this information is retrieved from the Firebase Database. From here on, the user can click on a specific review and read that review in ReadReviewActivity or click on the write review button to go to WriteReviewActivity.
 
-In WriteReviewActivity the user can give a specific rating out of 5 and add a text. On the click of the button "Submit Review" the review is saved, the activity finished and the user is then returned to the SelectedRestaurantActivity. 
+In WriteReviewActivity, the user can give a specific rating out of 5 and add a text. On the click of the button "Submit Review" the review is saved to Firebase, the activity finished, the user is then returned to the SelectedRestaurantActivity and sees a toast that their review has been submitted. This way, the user knows what has happenened and doesn't repeatedly press the submit review button. 
+
+In ReadReviewActivity, the user cannot interact with anything and can only see the rating of the specific review and the text if it was added. 
+
+YourReviewsActivity is the activity that shows all your own reviews you have written. In the listview, you can see the name of the restaurant you wrote a review about and what rating you gave it. This information was retrieved from Firebase in this same activity. When the user clicks on a specific review in the listView, he is directed to ReadReviewActivity.
+
+CustomListAdapter is a class which sets a custom adapter for a string TextView to be together with a RatingBar in a single list item in a ListView. This adapter was initially created for the reviews in SelectedRestaurantActivity, but reused in YourReviewsActivity to show the rating and writer/restaurant in a single list item. 
+
+AppConfig is only a small class which contains a variety of variables needed in NearRestaurantActivity, but because this activity was already so full, I decided on putting these in a seperate class and importing them later.
+
+The class Review has the variables title, id and rating. Here, title can be the name of the restaurant (YourReviewsActivity) or the name of the writer (SelectedRestaurantActivity). 
+
+MyAsyncTask is only used by NearRestaurantActivity for the HTTP request to the Google Places API Webservice about what restaurants are near to the users current location. This only asynctask returns a JSON string which is parsed in NearRestaurantActivity. 
+
 
 
 ## Challenges
