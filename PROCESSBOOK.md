@@ -18,7 +18,7 @@ For today, I had the goal to finish my technical design, finish the prototype an
 This morning we had the presentations of our prototype. Based on feedback, I will continue with the design I have so far, except for the incheck option. According to the observers, this feature will probably cost me too much time.
 
 ##Weekend 14-01 and 15-01
-In the weekend I made connection to the Google Places API and the Google Maps API and implemented them into my application. Still needs a lot of work concerning the query but the start has been made. 
+In the weekend I made connection to the Google Places API and the Google Maps API and implemented them into my application. Still needs a lot of work concerning the query but the start has been made. Based on my research, instead of presenting a list of possible restaurants, I want to show a map fragment and make it possible for the user to click on a specific restaurant. In turn, no map fragment will be shown in the next activity to create more space in the layout.
 
 ##Monday 16-01
 Today I was able to succesfully implement the Google Places API and get all the necessay information to connect the users for the Firebase Database. My plan for tomorrow is to try and save the first reviews and connect them to specific restaurants and users(writers of the review). 
