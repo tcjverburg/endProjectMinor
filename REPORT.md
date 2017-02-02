@@ -1,6 +1,6 @@
 # Report
 
-<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/report_picture.png" width=33%>
+<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/pic_6.png" width=33%>
 
 ----------NearRestaurantActivity----------
 
@@ -17,7 +17,7 @@ First of all, there are 8 activities. One for each screen and a BaseActivity whi
 
 This BaseActivity makes for less duplication of code and has a listener which directs the user back to the login screen, if the user is no longer logged in. This is convenient for the creating of the Actionbar, mAuthStateListener and methods like the getListAdapter which are used through out different activities. This means that all Activities are in one way or another related to BaseActivity. The actionbar is only used so the user can sign out at any moment they are in the application by clicking the signout button in top right hand corner. 
 
-LoginActivity makes connection with Facebook and handles the Facebook acess Tokens. When Authentication is succesful, the application first requests the permissions for the app to function. These are access to email, name and friendslist. Following this, the users Facebook friends who use the application are saved under their Facebook ID to Firebase. The user is then navigated to FriendsFeedActivity. 
+LoginActivity makes connection with Facebook and handles the Facebook acess Tokens. When Authentication is succesful, the application first requests the permissions for the app to function. These are access to email, name and friendslist. Following this, the users Facebook friends who use the application are saved under their Facebook ID to Firebase. The user is then navigated to FriendsFeedActivity. By using a function isNetworkAvailable() we also check whether the device has internet connection. If this is not the case, the user will receive a toast which will say so.  
 
 FriendsFeedActivity shows you a list of all the activities your friends have done in a single ListView. This is done by reading out the entire friends list from Firebase and seeing where these ID's have checked in and what reviews they have written. If a check in of one of these friends is more than 24 hours ago, the check in is removed from Firebase. By clicking on the items in the list, the user is either directed to a SelectedRestaurantActivity or a ReadReviewActivity if they click on a check in event or a write review event respectively. 
 
@@ -25,7 +25,7 @@ NearRestaurantActivity is the activity which shows the Map fragment. In the onCr
 
 In SelectedRestaurantActivity the ID is received from the intent of the previous activity and all the information is then read from firebase using this unique ID and the unique ID of every user. First, all the friends are retrieved from the firebase database again, but this time we scan for check ins and reviews which are also of the selected restaurant. The user will see the average rating given by all his friends of that restaurant, individual ratings of friends and friends who are checked in at that moment in time. All this information is retrieved from the Firebase Database. From here on, the user can click on a specific review and read that review in ReadReviewActivity or click on the write review button to go to WriteReviewActivity.
 
-In WriteReviewActivity, the user can give a specific rating out of 5 and add a text. On the click of the button "Submit Review", a reviewID has been generated and the review itself (with this ID) is saved to the Firebase database. Following this the activity finishes, the user is returned to the SelectedRestaurantActivity and sees a toast that their review has been submitted. This way, the user knows what has happenened and doesn't repeatedly press the submit review button. 
+In WriteReviewActivity, the user can give a specific rating out of 5 and add a text. On the click of the button "Submit Review", a reviewID has been generated and the review itself (with this ID) is saved to the Firebase database. Following this the activity finishes, the user is returned to the SelectedRestaurantActivity and sees a toast that their review has been submitted. This way, the user knows what has happenened and doesn't repeatedly press the submit review button. A user does not necessarily need to enter text for the review, but he does need to give a rating out of 5. If the user tries to submit a review without a rating, he will see a toast and no review will be saved.
 
 In ReadReviewActivity, the user cannot interact with anything and can only see the rating of the specific review and the text if it was added. 
 
@@ -39,7 +39,7 @@ The class Review has the variables title, id and rating. Here, title can be the 
 
 MyAsyncTask is only used by NearRestaurantActivity for the HTTP request to the Google Places API Webservice about what restaurants are near to the users current location. This only asynctask returns a JSON string which is parsed in NearRestaurantActivity. 
 
-## Firebase Structure
+## Updated Firebase Structure
 
 - Users
   - User ID
