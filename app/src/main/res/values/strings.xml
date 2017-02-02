@@ -23,4 +23,15 @@
     <string name="deleted_review">Deleted Review</string>
     <string name="no_internet">No internet connection.</string>
     <string name="auth_failed">Authentication failed.</string>
+    <string name="friend_activity_text">Click on one of the activities of your friends below to see where they are and read their reviews!</string>
+    <string name="own_review_activity_text">Click on one of your reviews below to read it back!</string>
+    <string name="check_in_info">Check in to let your friends know you are here!</string>
+    <string name="reviews_of_friends">Reviews of Friends:</string>
+    <string name="friends_who_are_checked_in_now">Friends who are checked in now:</string>
+    <string name="writing_a_review_of">Writing a review of:</string>
+    <string name="give_rating_below">Give the selected restaurant a rating and share your thoughts on the restaurant below:</string>
+    <string name="image_button_friend_activity">Image button friend activity</string>
+    <string name="image_button_restaurant_activity">Image button restaurant activity</string>
+    <string name="image_button_own_reviews_activity">Image button own reviews activity</string>
+    <string name="please_enter_rating">Please enter a rating of at least 1 star.</string>
 </resources>

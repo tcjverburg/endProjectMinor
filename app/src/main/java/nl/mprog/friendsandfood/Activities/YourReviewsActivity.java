@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,7 +17,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import nl.mprog.friendsandfood.Adapters.CustomAdapterRatingBar;
+import nl.mprog.friendsandfood.Classes.Review;
 import nl.mprog.friendsandfood.R;
 
 /**
@@ -47,7 +49,7 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.friends_nav).setOnClickListener(this);
 
         //View
-        listView = (ListView) findViewById(R.id.listViewReviews);
+        listView = (ListView) findViewById(R.id.list_view_reviews);
 
         setButtonColor();
         getOwnReviews();
@@ -70,17 +72,18 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         listener = mRefReviews.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<String> ownReviews = new ArrayList<String>();
+                ArrayList<Review> ownReviews = new ArrayList<>();
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
                     if (reviewHashFirebase.get("Writer").equals(getProfile())){
-                        ownReviews.add(reviewHashFirebase.get("RestaurantName"));
+                        ownReviews.add(new Review(reviewHashFirebase.get("RestaurantName"),
+                                reviewHashFirebase.get("ReviewID"),
+                                Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")))));
                         allReviewIDs.add(reviewHashFirebase.get("ReviewID"));
                         allReviewsHash.put(reviewHashFirebase.get("ReviewID"), reviewHashFirebase);
                     }
                 }
-                ListAdapter adapter = getAdapter(ownReviews);
-                listView.setAdapter(adapter);
+                customAdapterOwnReviews(ownReviews);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -92,19 +95,19 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
      * a review.
      */
     public void clickSelectedReview(){
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String nameWriter = "You";
-                String reviewID = allReviewIDs.get(position);
-                HashMap selectedReviewHash = allReviewsHash.get(reviewID);
-                Intent getNameScreen = new Intent(getApplicationContext(),ReadReviewActivity.class);
-                getNameScreen.putExtra("reviewHash", selectedReviewHash);
-                getNameScreen.putExtra("nameWriter", nameWriter);
-                startActivity(getNameScreen);
-            }
-        });
-    }
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    Review review = (Review) adapterView.getAdapter().getItem(position);
+                    String reviewID = allReviewIDs.get(position);
+                    HashMap<String, String> selectedReviewHash = allReviewsHash.get(reviewID);
+                    Intent getNameScreen = new Intent(getApplicationContext(),ReadReviewActivity.class);
+                    getNameScreen.putExtra("reviewHash", selectedReviewHash);
+                    getNameScreen.putExtra("nameWriter", "You");
+                    startActivity(getNameScreen);
+                }
+            });
+        }
 
     /** Deletes review from list view and from Firebase after long clicking the item. */
 
@@ -114,6 +117,7 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                 String reviewID = allReviewIDs.get(position);
+                allReviewIDs.remove(position);
                 mRefReviews.child(reviewID).removeValue();
                 Toast.makeText(getApplicationContext(), R.string.deleted_review,
                         Toast.LENGTH_SHORT).show();
@@ -122,12 +126,18 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
+    /** Sets custom adapter for ListView but give the name of the restaurant instead of writer. */
+    public void customAdapterOwnReviews(List<Review> list){
+        CustomAdapterRatingBar customAdapter = new CustomAdapterRatingBar(getApplicationContext(), list);
+        listView.setAdapter(customAdapter);
+    }
+
     /** On click method for the navigation bar. */
     @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.friends_nav) {
-            Intent getNameScreen = new Intent(getApplicationContext(), FriendsListActivity.class);
+            Intent getNameScreen = new Intent(getApplicationContext(), FriendsFeedActivity.class);
             startActivity(getNameScreen);
             finish();
         }

@@ -35,7 +35,7 @@ public class ReadReviewActivity extends BaseActivity {
         TextView header = (TextView) findViewById(R.id.review_header);
         TextView text = (TextView) findViewById(R.id.review_text);
         TextView nameRestaurant = (TextView)findViewById(R.id.restaurant_name);
-        RatingBar rBar = (RatingBar) findViewById(R.id.ratingBarReadReview);
+        RatingBar rBar = (RatingBar) findViewById(R.id.rating_bar_read_review);
 
         header.setText(String.format("%s%s", getString(R.string.review_from), nameWriter));
         nameRestaurant.setText(hashMap.get("RestaurantName"));

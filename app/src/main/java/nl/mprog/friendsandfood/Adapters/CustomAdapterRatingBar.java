@@ -56,7 +56,7 @@ public class CustomAdapterRatingBar extends BaseAdapter {
         TextView writerTextView = (TextView)v.findViewById(R.id.name_writer_list);
         RatingBar bar = (RatingBar)v.findViewById(R.id.rating_bar_list);
 
-        writerTextView.setText(mReviewList.get(position).getWriter());
+        writerTextView.setText(mReviewList.get(position).getTitle());
         bar.setRating(mReviewList.get(position).getRating());
         v.setTag(mReviewList.get(position).getReviewID());
 

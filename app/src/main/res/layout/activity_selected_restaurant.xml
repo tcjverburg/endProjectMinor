@@ -14,11 +14,12 @@
 
 
     <RatingBar
-        android:id="@+id/ratingBar"
+        android:id="@+id/rating_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
         android:rating="0"
+        android:stepSize=".5"
         android:isIndicator="true"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"/>
@@ -27,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/infocheckin"
-        android:text="Check in to let your friends know you are here!"
+        android:text="@string/check_in_info"
         android:textSize="15sp"/>
 
     <ToggleButton
@@ -42,33 +43,35 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reviews of Friends:"
+        android:text="@string/reviews_of_friends"
         android:textSize="15sp"
         android:paddingBottom="5dp"/>
 
     <ListView
-        android:id="@+id/listViewReviewFriends"
+        android:id="@+id/list_view_review_friends"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:background="@color/colorWhite"
+        android:layout_weight="1"
         />
-
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Friends who are checked in now:"
+        android:text="@string/friends_who_are_checked_in_now"
         android:textSize="15sp"
         android:paddingTop="10dp"
         android:paddingBottom="5dp"
+        android:layout_weight="1"
         />
 
     <ListView
-        android:id="@+id/listViewCheckIn"
+        android:id="@+id/list_view_check_in"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:background="@color/colorWhite"
         android:listSelector="@android:color/transparent"
+        android:layout_weight="1"
         />
 
     <Button
@@ -77,6 +80,7 @@
         android:layout_height="wrap_content"
         android:text="@string/submit_review"
         android:id="@+id/submit"
+        android:layout_weight="1"
         />
 
 </LinearLayout>

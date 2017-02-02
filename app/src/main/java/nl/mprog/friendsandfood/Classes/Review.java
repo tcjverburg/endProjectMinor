@@ -7,20 +7,20 @@ package nl.mprog.friendsandfood.Classes;
  */
 
 public class Review {
-    private String writer;
+    private String title;
     private String reviewID;
     private Float rating;
 
     /**Constructor of the Review class.*/
     public Review(String writer, String reviewID, Float rating) {
-        this.writer = writer;
+        this.title = writer;
         this.reviewID = reviewID;
         this.rating = rating;
     }
 
     /**All the getters of the Review class.*/
-    public String getWriter() {
-        return writer;
+    public String getTitle() {
+        return title;
     }
 
     public String getReviewID() {

@@ -340,7 +340,7 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         } else if (i == R.id.refresh) {
             recreate();
         } else if (i == R.id.friends_nav) {
-            Intent getNameScreen = new Intent(getApplicationContext(), FriendsListActivity.class);
+            Intent getNameScreen = new Intent(getApplicationContext(), FriendsFeedActivity.class);
             startActivity(getNameScreen);
         }
     }

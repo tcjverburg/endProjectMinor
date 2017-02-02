@@ -12,36 +12,35 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/friends"
         android:id="@+id/friends_nav"
         android:layout_weight="1"
         android:src="@drawable/ic_group_black_24dp"
         android:background="@drawable/bg_button"
         android:layout_marginTop="2dp"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
-        android:contentDescription="bla" />
+        android:contentDescription="@string/image_button_friend_activity" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/restaurants_nav"
-        android:text="@string/restaurants"
         android:layout_weight="1"
         android:src="@drawable/ic_local_dining_black_24dp"
         android:background="@drawable/bg_button"
         android:layout_marginTop="2dp"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:contentDescription="@string/image_button_restaurant_activity"/>
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/own_reviews_nav"
-        android:text="@string/own_reviews"
         android:layout_weight="1"
         android:src="@drawable/ic_folder_open_black_24dp"
         android:background="@drawable/bg_button"
         android:layout_marginTop="2dp"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:contentDescription="@string/image_button_own_reviews_activity"/>
 
 </LinearLayout>
 

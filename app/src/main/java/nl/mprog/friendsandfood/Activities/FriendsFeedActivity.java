@@ -27,7 +27,7 @@ import nl.mprog.friendsandfood.R;
  * are either directed to the restaurant their friend checked in, or the review their friend wrote.
  */
 
-public class FriendsListActivity extends BaseActivity implements View.OnClickListener{
+public class FriendsFeedActivity extends BaseActivity implements View.OnClickListener{
 
     private ListView listView;
 
@@ -49,7 +49,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         //Views
         findViewById(R.id.restaurants_nav).setOnClickListener(this);
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
-        listView = (ListView) findViewById(R.id.listViewFriends);
+        listView = (ListView) findViewById(R.id.list_view_friends);
 
         getUserFriends();
         clickSelectActivityFriend();

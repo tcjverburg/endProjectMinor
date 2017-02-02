@@ -10,7 +10,6 @@
         android:id="@+id/review_header"
         android:textSize="25sp"/>
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +17,7 @@
         android:textSize="20sp"/>
 
     <RatingBar
-        android:id="@+id/ratingBarReadReview"
+        android:id="@+id/rating_bar_read_review"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:stepSize="1.0"

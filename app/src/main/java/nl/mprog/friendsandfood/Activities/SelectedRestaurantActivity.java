@@ -12,7 +12,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,7 +52,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     private HashMap<String, HashMap<String, String>> allReviewsHash = new HashMap<>();
 
     private RatingBar ratingBar;
-    final String profile = Profile.getCurrentProfile().getId();
     private ToggleButton toggle;
 
 
@@ -70,8 +68,8 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         restaurantID = intent.getStringExtra("restaurantID");
 
         //The Views.
-        ratingBar = (RatingBar)findViewById(R.id.ratingBar);
-        listViewRatingBar = (ListView)findViewById(R.id.listViewReviewFriends);
+        ratingBar = (RatingBar)findViewById(R.id.rating_bar);
+        listViewRatingBar = (ListView)findViewById(R.id.list_view_review_friends);
         TextView name = (TextView) findViewById(R.id.selected_restaurant_name);
         findViewById(R.id.submit).setOnClickListener(this);
         name.setText(restaurantName);
@@ -90,9 +88,9 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     String time = String.valueOf(System.currentTimeMillis());
-                    mRefCheckins.child(profile).setValue(createHashToggle(time));
+                    mRefCheckins.child(getProfile()).setValue(createHashToggle(time));
                 } else {
-                    mRefCheckins.child(profile).removeValue();
+                    mRefCheckins.child(getProfile()).removeValue();
                 }
             }
         });
@@ -105,13 +103,13 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         activityInfo.put("Time", time);
         activityInfo.put("RestaurantName", restaurantName);
         activityInfo.put("RestaurantID", restaurantID);
-        activityInfo.put("User", profile);
+        activityInfo.put("User", getProfile());
         return activityInfo;
     }
 
     /** First EventListener which gets all the friends of the user and calls addFriendInformation */
     public void getUserFriendsValueEventListener(){
-        DatabaseReference mRefFriends = database.getReference("users").child(profile).child("friends");
+        DatabaseReference mRefFriends = database.getReference("users").child(getProfile()).child("friends");
         mRefFriends.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -141,7 +139,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         mRefReviews.addValueEventListener(new ValueEventListener() {
             ArrayList<String> friendReviewWriterNames = new ArrayList<String>();
             //The score is for the ratingbar.
-            int totalscore = 0;
+            float totalscore = 0;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 reviewList = new ArrayList<>();
@@ -157,7 +155,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                         }
                     }
                     if (friendReviewWriterNames.size() != 0){
-                        ratingBar.setRating(totalscore/(friendReviewWriterNames.size()));
+                        ratingBar.setRating(totalscore / (friendReviewWriterNames.size()));
                     }
                     customAdapter(reviewList);
                 }
@@ -197,12 +195,12 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                             if (user.equals(friend_id)) {
                                 friendCheckIn.add(mFriendsCompleteNames.get(z));
                             }
-                            else if (user.equals(profile)) {
+                            else if (user.equals(getProfile())) {
                                 toggle.setChecked(true);
                             }
                         }
                     }
-                    listViewCheckIn = (ListView) findViewById(R.id.listViewCheckIn);
+                    listViewCheckIn = (ListView) findViewById(R.id.list_view_check_in);
                     ListAdapter adapter = getAdapter(friendCheckIn);
                     listViewCheckIn.setAdapter(adapter);
                 }
@@ -225,7 +223,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Review review = (Review) adapterView.getAdapter().getItem(position);
-                String nameWriter = review.getWriter();
+                String nameWriter = review.getTitle();
                 String reviewID = allReviewIDs.get(position);
                 HashMap<String, String> selectedReviewHash = allReviewsHash.get(reviewID);
                 Intent getNameScreen = new Intent(getApplicationContext(),ReadReviewActivity.class);

@@ -53,8 +53,8 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
         restaurantName = intent.getStringExtra("restaurantName");
 
         //Views
-        findViewById(R.id.btnSubmitReview).setOnClickListener(this);
-        ratingBar = (RatingBar)findViewById(R.id.ratingBar);
+        findViewById(R.id.btn_submit_review).setOnClickListener(this);
+        ratingBar = (RatingBar)findViewById(R.id.rating_bar);
         editText = (EditText) findViewById(R.id.edit_text_review);
         TextView infoReview = (TextView)findViewById(R.id.write_restaurant_info);
 
@@ -83,23 +83,35 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
+    //* Checks whether the user is entering a valid review. Rating is compulsory, text is not.*/
+    public boolean checkReview(float rating){
+        if (rating == 0){
+            Toast.makeText(getApplicationContext(), R.string.please_enter_rating,
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     //*This is an onClick method which saves all the review information to Firebase and then
     // finishes this activity. By doing this, the user is returned to the SelectedRestaurant
     // activity.*/
     @Override
     public void onClick(View v) {
-        String time = String.valueOf(System.currentTimeMillis());
-        Map<String, Object> reviewInfo = new HashMap<>();
-        reviewInfo.put("ReviewID", reviewID);
-        reviewInfo.put("RestaurantID", restaurantID);
-        reviewInfo.put("RestaurantName", restaurantName);
-        reviewInfo.put("Writer", profile);
-        reviewInfo.put("Rating", ratingBar.getRating());
-        reviewInfo.put("Text", String.valueOf(editText.getText()));
-        reviewInfo.put("Time", time);
-        myRefReviews.child(reviewID).updateChildren(reviewInfo);
-        Toast.makeText(getApplicationContext(), R.string.review_submitted,
-                Toast.LENGTH_SHORT).show();
-        finish();
+        if (checkReview(ratingBar.getRating())){
+            String time = String.valueOf(System.currentTimeMillis());
+            Map<String, Object> reviewInfo = new HashMap<>();
+            reviewInfo.put("ReviewID", reviewID);
+            reviewInfo.put("RestaurantID", restaurantID);
+            reviewInfo.put("RestaurantName", restaurantName);
+            reviewInfo.put("Writer", profile);
+            reviewInfo.put("Rating", ratingBar.getRating());
+            reviewInfo.put("Text", String.valueOf(editText.getText()));
+            reviewInfo.put("Time", time);
+            myRefReviews.child(reviewID).updateChildren(reviewInfo);
+            Toast.makeText(getApplicationContext(), R.string.review_submitted,
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 }

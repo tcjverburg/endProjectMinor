@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     if (rawData != null) {
-                        Intent intent = new Intent(LoginActivity.this,FriendsListActivity.class);
+                        Intent intent = new Intent(LoginActivity.this,FriendsFeedActivity.class);
                         saveFriendsToFirebase(rawData);
                         startActivity(intent);
                         updateUI(user);

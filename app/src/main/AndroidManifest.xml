@@ -39,7 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.FriendsListActivity"
+        <activity android:name=".Activities.FriendsFeedActivity"
             android:label="List with friends"
             />
         <activity android:name=".Activities.NearRestaurantActivity"
