@@ -35,7 +35,6 @@
         <activity android:name=".Activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -50,6 +49,7 @@
             />
         <activity android:name=".Activities.SelectedRestaurantActivity"
             android:label="Information about selected restaurant"
+            android:screenOrientation="portrait"
             />
         <activity android:name=".Activities.WriteReviewActivity"
             android:label="Write a review about a restaurant you have been."

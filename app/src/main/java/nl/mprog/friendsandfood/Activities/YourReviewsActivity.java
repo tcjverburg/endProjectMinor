@@ -47,7 +47,7 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.friends_nav).setOnClickListener(this);
 
         listView = (ListView) findViewById(R.id.listViewReviews);
-        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, restaurants); // simple text view for list item
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, restaurants);
         listView.setAdapter(adapter);
 
         setButtonColor();
@@ -56,13 +56,15 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         clickDeleteReview();
     }
 
-    public void setButtonColor(){
-        //Sets the color of the navigation button of current activity.
+    /** Sets the color of the navigation button of current activity. */
+
+     public void setButtonColor(){
         ImageButton Nav = (ImageButton)findViewById(R.id.own_reviews_nav);
         int myColor = getResources().getColor(R.color.colorButtonPressed);
         Nav.setBackgroundColor(myColor);
     }
 
+    /** Gets all the reviews from Firebase of the current user. */
     public void getOwnReviews(){
 
         mRefReviews =  database.getReference("reviews");
@@ -87,6 +89,9 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
+    /** Navigates the user to ReadReviewActivity and gives the user the opportunity to read back
+     * a review.
+     */
     public void clickSelectedReview(){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -102,9 +107,9 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
+    /** Deletes review from list view and from Firebase after long clicking the item. */
 
     public void clickDeleteReview() {
-        //Deletes favorite from list view and from shared preference after long clicking the item.
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
@@ -117,9 +122,10 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
             }
         });
     }
+
+    /** On click method for the navigation bar. */
     @Override
     public void onClick(View v) {
-        //On click method for the navigation bar and other buttons.
         int i = v.getId();
         if (i == R.id.friends_nav) {
             Intent getNameScreen = new Intent(getApplicationContext(), FriendsListActivity.class);
@@ -133,8 +139,8 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    public ListAdapter adapter(ArrayList<String> arrayList){
-        //Returns arrayAdapter for list view.
+    /** Returns arrayAdapter for list view. */
+     public ListAdapter adapter(ArrayList<String> arrayList){
         return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
     }
 }

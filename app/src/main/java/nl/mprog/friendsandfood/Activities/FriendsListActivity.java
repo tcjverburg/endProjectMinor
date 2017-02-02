@@ -31,11 +31,13 @@ import nl.mprog.friendsandfood.R;
 public class FriendsListActivity extends BaseActivity implements View.OnClickListener{
 
     private ListView listView;
+
     private ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
     private ArrayList<String> mFriendsCompleteIDs = new ArrayList<>();
     private ArrayList<String> friendWriterActivity = new ArrayList<>();
     private ArrayList<String> friendCheckInNames = new ArrayList<>();
     private ArrayList<String> allActivityIDs = new ArrayList<>();
+
     private HashMap<String, HashMap<String, String>> allActivityHash = new HashMap<>();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -93,6 +95,8 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         mRefReviews.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                friendWriterActivity = new ArrayList<>();
+                allActivityIDs = new ArrayList<>();
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
                     for (int i = 0; i < friends.size(); i++) {
@@ -124,6 +128,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         mRefCheckins.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                friendCheckInNames = new ArrayList<>();
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     HashMap<String, HashMap> checkinHashFirebase = (HashMap<String, HashMap>) child.getValue();
                     Object[] keys = checkinHashFirebase.keySet().toArray();
@@ -216,5 +221,6 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
             finish();
         }
     }
+
 
 }

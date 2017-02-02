@@ -12,6 +12,17 @@
         android:id="@+id/selected_restaurant_name"
         android:textSize="20sp"/>
 
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:rating="0"
+        android:isIndicator="true"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,18 +36,8 @@
         android:id="@+id/toggleButton"
         android:textOff="@string/checked_out"
         android:textOn="@string/checked_in"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"/>
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="5"
-        android:rating="0"
-        android:isIndicator="true"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -71,7 +72,7 @@
         />
 
     <Button
-        android:paddingTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/submit_review"
