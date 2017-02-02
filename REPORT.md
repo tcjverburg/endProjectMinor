@@ -3,7 +3,7 @@
 
 <img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/report_picture.png" width=33%>
 
---------NearRestaurantActivity--------
+----------NearRestaurantActivity----------
 
 ## Descriprion
 The application is designed to use your geo location to see what restaurants are near, and by logging in with facebook sees if any of your facebook friends have been there and left a positive review or are even checked in at that moment. By clicking on one of the markers, as the ones you see in the image, you are navigated to an activity which shows information about the restaurant, reviews left by friends, the option to check in and write a review.
@@ -13,9 +13,34 @@ The first part of the application will be the login part using facebook. Followi
 
 ## Technical Design
 ### Clearly describe the technical design: how is the functionality implemented in your code? This should be like your DESIGN.md but updated to reflect the final application. First, give a high level overview, which helps us navigate and understand the total of your code (which components are there?). Second, go into detail, and describe the modules/classes and how they relate.
-First of all, there are 8 activities. One for each screen and a BaseActivity which is the Superclass of all the other activities, with the exception of LoginActivity. This BaseActivity makes for less duplication of code and has a listener which directs the user back to the login screen, if the user is no longer logged in. There is 1 CustomArrayAdapter class for implementing a RatingBar, 1 AsyncTask class to do a HTTP request for the Google Places API Webservice, 1 Review class and 1 AppConfig  class which makes NearRestaurantActivity less messy. This is how the entire structure looks like:
+First of all, there are 8 activities. One for each screen and a BaseActivity which is the Superclass of all the other activities, with the exception of LoginActivity.  There is 1 CustomArrayAdapter class for implementing a RatingBar, 1 AsyncTask class to do a HTTP request for the Google Places API Webservice, 1 Review class and 1 AppConfig  class which makes NearRestaurantActivity less messy. This is how the entire structure looks like:
 
 <img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/new_design.png" width=100%>
+
+This BaseActivity makes for less duplication of code and has a listener which directs the user back to the login screen, if the user is no longer logged in. This is convenient for the creating of the Actionbar, mAuthStateListener and methods like the getListAdapter which are used through out different activities. This means that all Activities are in one way or another related to BaseActivity. The actionbar is only used so the user can sign out at any moment they are in the application by clicking the signout button in top right hand corner. 
+
+LoginActivity makes connection with Facebook and handles the Facebook acess Tokens. When Authentication is succesful, the application first requests the permissions for the app to function. These are access to email, name and friendslist. Following this, the users Facebook friends who use the application are saved under their Facebook ID to Firebase. The user is then navigated to FriendsFeedActivity. 
+
+FriendsFeedActivity shows you a list of all the activities your friends have done in a single ListView. This is done by reading out the entire friends list from Firebase and seeing where these ID's have checked in and what reviews they have written. If a check in of one of these friends is more than 24 hours ago, the check in is removed from Firebase. By clicking on the items in the list, the user is either directed to a SelectedRestaurantActivity or a ReadReviewActivity if they click on a check in event or a write review event respectively. 
+
+NearRestaurantActivity is the activity which shows the Map fragment. In the onCreate, all the permissions are checked for accessing and requesting the current location of the user . After  the map is created and the Google API client is built, the location is used to query Google Places API Webservice for restaurants near the user. The API then returns 20 of the most relevant restaurants in the radius of 1km of the user and adds them as locationmarks on the map. This is done immediately after the avtivity is created, so the result is that the user immediately sees a map with several markers. When the user clicks on one of the markers, the user is navigated to SelectedRestaurantActivity and this activity receives the ID of the selected restaurant using the intent. 
+
+In SelectedRestaurantActivity the ID is received from the intent of the previous activity and all the information is then read from firebase using this unique ID and the unique ID of every user. First, all the friends are retrieved from the firebase database again, but this time we scan for check ins and reviews which are also of the selected restaurant. The user will see the average rating given by all his friends of that restaurant, individual ratings of friends and friends who are checked in at that moment in time. All this information is retrieved from the Firebase Database. From here on, the user can click on a specific review and read that review in ReadReviewActivity or click on the write review button to go to WriteReviewActivity.
+
+In WriteReviewActivity, the user can give a specific rating out of 5 and add a text. On the click of the button "Submit Review" the review is saved to Firebase, the activity finished, the user is then returned to the SelectedRestaurantActivity and sees a toast that their review has been submitted. This way, the user knows what has happenened and doesn't repeatedly press the submit review button. 
+
+In ReadReviewActivity, the user cannot interact with anything and can only see the rating of the specific review and the text if it was added. 
+
+YourReviewsActivity is the activity that shows all your own reviews you have written. In the listview, you can see the name of the restaurant you wrote a review about and what rating you gave it. This information was retrieved from Firebase in this same activity. When the user clicks on a specific review in the listView, he is directed to ReadReviewActivity.
+
+CustomListAdapter is a class which sets a custom adapter for a string TextView to be together with a RatingBar in a single list item in a ListView. This adapter was initially created for the reviews in SelectedRestaurantActivity, but reused in YourReviewsActivity to show the rating and writer/restaurant in a single list item. 
+
+AppConfig is only a small class which contains a variety of variables needed in NearRestaurantActivity, but because this activity was already so full, I decided on putting these in a seperate class and importing them later.
+
+The class Review has the variables title, id and rating. Here, title can be the name of the restaurant (YourReviewsActivity) or the name of the writer (SelectedRestaurantActivity). 
+
+MyAsyncTask is only used by NearRestaurantActivity for the HTTP request to the Google Places API Webservice about what restaurants are near to the users current location. This only asynctask returns a JSON string which is parsed in NearRestaurantActivity. 
+
 
 
 ## Challenges
