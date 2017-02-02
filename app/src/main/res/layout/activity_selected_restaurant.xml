@@ -12,7 +12,6 @@
         android:id="@+id/selected_restaurant_name"
         android:textSize="20sp"/>
 
-
     <RatingBar
         android:id="@+id/rating_bar"
         android:layout_width="wrap_content"
@@ -24,20 +23,13 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/infocheckin"
-        android:text="@string/check_in_info"
-        android:textSize="15sp"/>
-
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/toggleButton"
         android:textOff="@string/checked_out"
         android:textOn="@string/checked_in"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"/>
 
     <TextView
@@ -52,7 +44,6 @@
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:background="@color/colorWhite"
-        android:layout_weight="1"
         />
 
     <TextView
@@ -62,7 +53,6 @@
         android:textSize="15sp"
         android:paddingTop="10dp"
         android:paddingBottom="5dp"
-        android:layout_weight="1"
         />
 
     <ListView
@@ -71,7 +61,6 @@
         android:layout_height="100dp"
         android:background="@color/colorWhite"
         android:listSelector="@android:color/transparent"
-        android:layout_weight="1"
         />
 
     <Button
@@ -80,7 +69,6 @@
         android:layout_height="wrap_content"
         android:text="@string/submit_review"
         android:id="@+id/submit"
-        android:layout_weight="1"
         />
 
 </LinearLayout>
