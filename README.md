@@ -2,7 +2,7 @@
 ### Tom Verburg 10769633
 ### Test Facebook Email: test.programmeer@gmail.com
 ### Test Facebook Password: ProgramProj
-### Run on Device due to GPS and login on your Facebook app on your phone with the Test Username and Test Password mentioned above. If you do not have the Facebook application on your phone, you can enter the Username and Password in the applications LoginActivity. 
+### Run on Device due to GPS and login on your Facebook app on your phone with the Test Username and Test Password mentioned above. If you do not have the Facebook application on your phone, you can enter the Username and Password when the application starts.
 
 ## Copyright
 Copyright (c) 2017 Verburg, Tom under the terms of the MIT license.
