@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Profile;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,14 +23,15 @@ import java.util.Map;
 import nl.mprog.friendsandfood.R;
 
 /**
- * Created by Gebruiker on 12-1-2017.
+ * Created by Tom Verburg on 12-1-2017.
+ * In this activity the user is able to write a review of a specific restaurant and give it a rating
+ * out of 5 using a RatingBar. After the user clicks the "submit" button, the review is saved to
+ * Firebase and the user is returned to the previous activity.
  */
 
 public class WriteReviewActivity extends BaseActivity implements View.OnClickListener {
 
-    private FirebaseUser user;
     private DatabaseReference myRefReviews;
-    private DatabaseReference myRefReviewsInfo;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private RatingBar ratingBar;
     private String restaurantID;
@@ -56,10 +56,12 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
         TextView infoReview = (TextView)findViewById(R.id.write_restaurant_info);
 
         infoReview.setText(restaurantName);
-        getReviewCount();
+        generateNewReviewID();
     }
 
-    public void getReviewCount(){
+    //* Generates a unique review ID based on the previous amount of reviews written
+    // and the id of the user*/
+    public void generateNewReviewID(){
         myRefReviews = database.getReference("reviews");
         myRefReviews.addValueEventListener(new ValueEventListener() {
             //Database listener which fires when the database changes and counts reviews.
@@ -70,8 +72,7 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
                     String oldSearchTerm = child.getValue().toString();
                     oldReviews.add(oldSearchTerm);
                 }
-                String reviewID = profile + oldReviews.size();
-                getReference(reviewID);
+                WriteReviewActivity.this.reviewID = profile + oldReviews.size();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -79,11 +80,9 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
-    public void getReference(String newReviewID){
-        myRefReviewsInfo = myRefReviews.child(newReviewID);
-        reviewID = newReviewID;
-    }
-
+    //*This is an onClick method which saves all the review information to Firebase and then
+    // finishes this activity. By doing this, the user is returned to the SelectedRestaurant
+    // activity.*/
     @Override
     public void onClick(View v) {
         String time = String.valueOf(System.currentTimeMillis());
@@ -96,7 +95,7 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
         reviewInfo.put("Text", String.valueOf(editText.getText()));
         reviewInfo.put("Time", time);
         myRefReviews.child(reviewID).updateChildren(reviewInfo);
-        Toast.makeText(getApplicationContext(), "Review submitted!",
+        Toast.makeText(getApplicationContext(), R.string.review_submitted,
                 Toast.LENGTH_SHORT).show();
         finish();
     }

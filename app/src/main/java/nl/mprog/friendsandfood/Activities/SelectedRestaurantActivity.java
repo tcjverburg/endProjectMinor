@@ -30,24 +30,28 @@ import nl.mprog.friendsandfood.R;
 import nl.mprog.friendsandfood.Classes.Review;
 
 /**
- * Created by Gebruiker on 12-1-2017.
+ * Created by Tom Verburg on 12-1-2017.
+ * In this activity, the user is presented will all the infomation about a selected restaurant.
+ * Here, the user can see the name, rating by friends, reviews by friends and friends who have
+ * checked in. The user themselves can navigate to WriteReviewActivity by clicking the WriteReview
+ * button and check in/out. Furthermore, the user can click on a review of a friend and navigate
+ * to ReadReviewActivity and read the review a friend has written.
  */
 
 public class SelectedRestaurantActivity extends BaseActivity implements View.OnClickListener{
     private ListView listViewCheckIn;
     private ListView listViewRatingBar;
-    private CustomAdapterRatingBar customAdapter;
     private List<Review> reviewList;
 
     private String restaurantID;
     private String restaurantName;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
     private ArrayList<String> mFriendsID = new ArrayList<>();
-    private ArrayList<String> allReviewIDs = new ArrayList<String>();
-    private HashMap<String, HashMap<String, String>> allReviewsHash = new HashMap<String, HashMap<String, String>>();
-    private ValueEventListener listener;
+    private ArrayList<String> allReviewIDs = new ArrayList<>();
+    private HashMap<String, HashMap<String, String>> allReviewsHash = new HashMap<>();
+
     private RatingBar ratingBar;
     final String profile = Profile.getCurrentProfile().getId();
     private ToggleButton toggle;
@@ -60,24 +64,25 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_restaurant);
 
+        //Intent from previous activity.
         Intent intent = getIntent();
         restaurantName = intent.getStringExtra("restaurantName");
         restaurantID = intent.getStringExtra("restaurantID");
 
+        //The Views.
         ratingBar = (RatingBar)findViewById(R.id.ratingBar);
         listViewRatingBar = (ListView)findViewById(R.id.listViewReviewFriends);
-
         TextView name = (TextView) findViewById(R.id.selected_restaurant_name);
         findViewById(R.id.submit).setOnClickListener(this);
-
         name.setText(restaurantName);
 
-        mainValueEventListener();
+        getUserFriendsValueEventListener();
         clickSelectReviewFriend();
         setToggleButton();
 
     }
 
+    /** This method saves the check in status of the user to Firebase*/
     public void setToggleButton(){
         final DatabaseReference mRefCheckins =  database.getReference("checkin").child(restaurantID);
         toggle = (ToggleButton) findViewById(R.id.toggleButton);
@@ -93,6 +98,8 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         });
     }
 
+    /** Saves all the data in a map so it can be saved in one go, this way the listener doesn't
+     * retrieve incomplete data. */
     public Map<String, Object> createHashToggle(String time){
         Map<String, Object> activityInfo = new HashMap<>();
         activityInfo.put("Time", time);
@@ -102,13 +109,12 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         return activityInfo;
     }
 
-    public void mainValueEventListener(){
+    /** First EventListener which gets all the friends of the user and calls addFriendInformation */
+    public void getUserFriendsValueEventListener(){
         DatabaseReference mRefFriends = database.getReference("users").child(profile).child("friends");
         mRefFriends.addValueEventListener(new ValueEventListener() {
-            //Database listener which fires when the database changes and counts reviews.
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     String friendName = child.getValue().toString();
                     String friendID = child.getKey();
@@ -121,6 +127,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         });
     }
 
+    /** Saves data of friends in ArrayLists. */
     public void addFriendInformation(String friendName, String friendID){
         mFriendsCompleteNames.add(friendName);
         mFriendsID.add(friendID);
@@ -128,11 +135,12 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         findCheckin(mFriendsID);
     }
 
+    /** Finds all the reviews of friends from Firebase. */
     public void findReviews(final ArrayList<String> friends){
         DatabaseReference mRefReviews =  database.getReference("reviews");
-        listener = mRefReviews.addValueEventListener(new ValueEventListener() {
-            //Database listener which fires when the database changes and counts reviews.
-            ArrayList<String> friendWriterNames = new ArrayList<String>();
+        mRefReviews.addValueEventListener(new ValueEventListener() {
+            ArrayList<String> friendReviewWriterNames = new ArrayList<String>();
+            //The score is for the ratingbar.
             int totalscore = 0;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -140,16 +148,16 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
                     for (int i = 0; i < friends.size(); i++) {
-                        String friend_id = friends.get(i).toString();
+                        String friend_id = friends.get(i);
                         if (reviewHashFirebase.get("Writer").equals(friend_id) &
                                 reviewHashFirebase.get("RestaurantID").equals(restaurantID)){
-                                friendWriterNames = addFriendReviewInformation(friendWriterNames,
+                                friendReviewWriterNames = addFriendReviewInformation(friendReviewWriterNames,
                                         reviewHashFirebase, i);
                                 totalscore += Float.valueOf(String.valueOf(reviewHashFirebase.get("Rating")));
                         }
                     }
-                    if (friendWriterNames.size() != 0){
-                        ratingBar.setRating(totalscore/(friendWriterNames.size()));
+                    if (friendReviewWriterNames.size() != 0){
+                        ratingBar.setRating(totalscore/(friendReviewWriterNames.size()));
                     }
                     customAdapter(reviewList);
                 }
@@ -160,6 +168,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         });
     }
 
+    /** Gets all the review information of the friends of the user*/
     public ArrayList<String> addFriendReviewInformation(ArrayList<String> friendWriterNames,
                                                         HashMap<String, String> reviewHashFirebase,
                                                         int i){
@@ -172,10 +181,10 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         return friendWriterNames;
     }
 
+    /** Finds all the check ins of friends from Firebase. */
     public void findCheckin(final ArrayList<String> friends){
         DatabaseReference mRefCheckins =  database.getReference("checkin").child(restaurantID);
         mRefCheckins.addValueEventListener(new ValueEventListener() {
-            //Database listener which fires when the database changes and counts reviews.
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> friendCheckIn = new ArrayList<String>();
@@ -204,19 +213,19 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
             }
         });}
 
+    /** Returns arrayAdapter for the first ListView. */
     public ListAdapter adapter(ArrayList<String> arrayList){
-        //Returns arrayAdapter for list view.
         return new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
     }
 
+    /** Sets custom adapter for the second ListView. */
     public void customAdapter(List<Review> list){
-        //In aparte functie knallen
-        customAdapter = new CustomAdapterRatingBar(getApplicationContext(), list);
+        CustomAdapterRatingBar customAdapter = new CustomAdapterRatingBar(getApplicationContext(), list);
         listViewRatingBar.setAdapter(customAdapter);
     }
 
+    /** Starts ReadReviewActivity after clicking a review in the list view.*/
     public void clickSelectReviewFriend() {
-        //Starts SearchResultActivity after clicking a previous search term in the list view.
         listViewRatingBar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -232,6 +241,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         });
     }
 
+    /** On click method for the navigation bar and other buttons.*/
     @Override
     public void onClick(View v) {
         //On click method for the navigation bar and other buttons.

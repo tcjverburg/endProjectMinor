@@ -87,7 +87,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         mFriendsCompleteIDs.add(friendID);
     }
 
-    /** Saves data of friends in ArrayLists. */
+    /** Finds all the reviews of friends from Firebase. */
     public void findFriendReviews(final ArrayList<String> friends){
         DatabaseReference mRefReviews = database.getReference("reviews");
         mRefReviews.addValueEventListener(new ValueEventListener() {
@@ -117,7 +117,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
-    /** Finds all the current CheckIns of friends. */
+    /** Finds all the current CheckIns of friends from Firebase. */
     public void findFriendCheckIn(final ArrayList<String> friends,
                                   final ArrayList<String> activity){
         DatabaseReference mRefCheckins =  database.getReference("checkin");
@@ -132,7 +132,7 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                         HashMap checkInInfoHash = checkinHashFirebase.get(key);
                         for (int z = 0; z < friends.size(); z++) {
                             String friend_id = friends.get(z);
-                            if (key.equals(friend_id)) {
+                            if (key.equals(friend_id)& !checkTime(checkInInfoHash)) {
                                 getFriendCheckinInfo(z, checkInInfoHash, key);
                             }
                         }
@@ -158,6 +158,19 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
         allActivityHash.put(key, checkInInfoHash);
     }
 
+    /** Checks how long ago the friend was checked in. If it is more than 24 hours ago, the check
+     * in is deleted from Firebase and not shown in the activity feed of the user.*/
+    public Boolean checkTime(HashMap checkInInfoHash){
+        Long currentTime = System.currentTimeMillis();
+        Float checkInTime = Float.valueOf(String.valueOf(checkInInfoHash.get("Time")));
+        if (currentTime - checkInTime > 86400000){
+            database.getReference("checkin").child(String.valueOf(checkInInfoHash.get("RestaurantID")))
+                    .child(String.valueOf(checkInInfoHash.get("User"))).removeValue();
+            return true;
+        }
+        return false;
+    }
+
     /** This onClickListener is for the ListView which contains the activity
      * of your friends. Based on whether the user clicks on a list item containing a review message
      * or a check in message, the user is directed to a new activity.*/
@@ -174,13 +187,11 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
                     getNameScreen.putExtra("reviewHash", allActivityHash.get(ID));
                     getNameScreen.putExtra("nameWriter", nameWriter);
                     startActivity(getNameScreen);
-                    finish();
                 } else if (text.contains("checked")){
                     Intent intent = new Intent(getApplicationContext(),SelectedRestaurantActivity.class);
                     intent.putExtra("restaurantName", allActivityHash.get(ID).get("RestaurantName"));
                     intent.putExtra("restaurantID", allActivityHash.get(ID).get("RestaurantID"));
                     startActivity(intent);
-                    finish();
                 }
             }
         });
@@ -205,4 +216,5 @@ public class FriendsListActivity extends BaseActivity implements View.OnClickLis
             finish();
         }
     }
+
 }

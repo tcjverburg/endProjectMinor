@@ -23,7 +23,7 @@ import java.util.HashMap;
 import nl.mprog.friendsandfood.R;
 
 /**
- * Created by Gebruiker on 12-1-2017.
+ * Created by Tom Verburg on 12-1-2017.
  */
 
 public class YourReviewsActivity extends BaseActivity implements View.OnClickListener{
@@ -67,12 +67,9 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
 
         mRefReviews =  database.getReference("reviews");
         listener = mRefReviews.addValueEventListener(new ValueEventListener() {
-            //Database listener which fires when the database changes and counts reviews.
-            ArrayList<String> ownReviews = new ArrayList<String>();
-            int totalscore = 0;
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<String> ownReviews = new ArrayList<String>();
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     HashMap<String,String> reviewHashFirebase = (HashMap<String, String>) child.getValue();
                     if (reviewHashFirebase.get("Writer").equals(getProfile())){
@@ -114,9 +111,8 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                 String reviewID = allReviewIDs.get(position);
                 mRefReviews.child(reviewID).removeValue();
-                Toast.makeText(getApplicationContext(), "Deleted Review",
+                Toast.makeText(getApplicationContext(), R.string.deleted_review,
                         Toast.LENGTH_SHORT).show();
-                //TESTING :   getOwnReviews();
                 return true;
             }
         });

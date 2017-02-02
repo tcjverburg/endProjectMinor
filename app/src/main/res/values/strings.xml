@@ -19,4 +19,6 @@
     <string name="review_from">"Review from "</string>
     <string name="checked_in_at">" checked in at "</string>
     <string name="wrote_review_of">" wrote a review of "</string>
+    <string name="review_submitted">Review submitted!</string>
+    <string name="deleted_review">Deleted Review</string>
 </resources>
