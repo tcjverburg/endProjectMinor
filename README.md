@@ -4,7 +4,7 @@
 ### Test Facebook Password: ProgramProj
 
 ## Copyright
-This project is licensed under the terms of the MIT license.
+Copyright (c) 2017 Verburg, Tom under the terms of the MIT license.
 
 ## Application Purpose
 When going out and one wishes to go out for diner, it is often tough choosing a restaurant. Even when you look up a specific restaurant, the ratings given will most likely be given by people you do not know or gave an anonymous rating. However, when someone you know recommends a specific restaurant, you are more likely to be convinced by their opinion and make a quick decision on where to eat. Therefore, I created an app which uses your geo location to see what restaurants are near, and by logging in with facebook sees if any of your facebook friends have been there and left a positive review or are even checked in at that moment. 
