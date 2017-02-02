@@ -1,5 +1,4 @@
 # Report
-## Create a report (REPORT.md), based on your design document, containing important decisions that you’ve made, e.g. where you changed your mind during the past weeks. This is how you show the reviewer that you actually understand what you have done.
 
 <img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/report_picture.png" width=33%>
 
