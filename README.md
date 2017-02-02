@@ -1,4 +1,4 @@
-# Application Name:Friends&Food
+# Application Name:Friends & Food
 ### Tom Verburg 10769633
 ### Test Facebook Email: test.programmeer@gmail.com
 ### Test Facebook Password: ProgramProj
