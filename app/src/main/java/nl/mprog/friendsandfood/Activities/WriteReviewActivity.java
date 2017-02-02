@@ -9,7 +9,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +37,6 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
     private String restaurantID;
     private String restaurantName;
     private String reviewID;
-    private final String profile = Profile.getCurrentProfile().getId();
     private EditText editText;
 
 
@@ -75,7 +73,7 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
                     String oldSearchTerm = child.getValue().toString();
                     oldReviews.add(oldSearchTerm);
                 }
-                WriteReviewActivity.this.reviewID = profile + oldReviews.size();
+                WriteReviewActivity.this.reviewID = getProfile() + oldReviews.size();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -99,15 +97,13 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (checkReview(ratingBar.getRating())){
-            String time = String.valueOf(System.currentTimeMillis());
             Map<String, Object> reviewInfo = new HashMap<>();
             reviewInfo.put("ReviewID", reviewID);
             reviewInfo.put("RestaurantID", restaurantID);
             reviewInfo.put("RestaurantName", restaurantName);
-            reviewInfo.put("Writer", profile);
+            reviewInfo.put("Writer", getProfile());
             reviewInfo.put("Rating", ratingBar.getRating());
             reviewInfo.put("Text", String.valueOf(editText.getText()));
-            reviewInfo.put("Time", time);
             myRefReviews.child(reviewID).updateChildren(reviewInfo);
             Toast.makeText(getApplicationContext(), R.string.review_submitted,
                     Toast.LENGTH_SHORT).show();
