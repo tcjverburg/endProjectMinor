@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         callBackManager();
     }
 
-    //*CallbackManager which manages the Facebook Login, information retrieval and updates the UI.*/
+    /**CallbackManager which manages the Facebook Login, information retrieval and updates the UI.*/
     public void callBackManager(){
         mCallbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //* Requests Facebook user friends information.*/
+    /** Requests Facebook user friends information.*/
     public void requestGraph(){
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -118,8 +118,8 @@ public class LoginActivity extends AppCompatActivity {
         ).executeAsync();
     }
 
-    //* mAuth listener which updates the UI and starts the next activity based on the login
-    // status of the user.*/
+    /** mAuth listener which updates the UI and starts the next activity based on the login
+    / status of the user.*/
     public void setListener(){
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -160,14 +160,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //* Passes the activity result back to the Facebook SDK.*/
+    /** Passes the activity result back to the Facebook SDK.*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    //* Tries to get the Facebook AccessToken. */
+    /** Tries to get the Facebook AccessToken. */
     private void handleFacebookAccessToken(AccessToken token) {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -183,12 +183,10 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    //* Once login is successful, the friends list of the user is saved to Firebase for later
+    /** Once login is successful, the friends list of the user is saved to Firebase for later
     // retrieval*/
     public void saveFriendsToFirebase(String rawData){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRefFriends = database.getReference("users").child(Profile
-                .getCurrentProfile().getId()).child("friends");
+        DatabaseReference myRefFriends = getDatabaseReference();
         JSONArray friendsList;
         try {
             friendsList = new JSONArray(rawData);
@@ -202,7 +200,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //* Signs the user out. */
+    /** Gets DatabaseReference for the users' friends.  */
+    public DatabaseReference getDatabaseReference(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        return database.getReference("users").child(Profile
+                .getCurrentProfile().getId()).child("friends");
+    }
+
+    /** Signs the user out. */
     public void signOut() {
         mAuth.signOut();
         LoginManager.getInstance().logOut();

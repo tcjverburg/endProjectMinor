@@ -26,7 +26,7 @@ import nl.mprog.friendsandfood.R;
  * Created by Tom Verburg on 12-1-2017.
  * In this activity the user is able to write a review of a specific restaurant and give it a rating
  * out of 5 using a RatingBar. After the user clicks the "submit" button, the review is saved to
- * Firebase and the user is returned to the previous activity.
+ * Firebase and the user is returned t
  */
 
 public class WriteReviewActivity extends BaseActivity implements View.OnClickListener {

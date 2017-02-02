@@ -47,8 +47,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
     private String restaurantName;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference mRefFriends;
-
     private ArrayList<String> mFriendsCompleteNames = new ArrayList<>();
     private ArrayList<String> mFriendsID = new ArrayList<>();
     private ArrayList<String> allReviewIDs = new ArrayList<>();
@@ -78,8 +76,6 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
         findViewById(R.id.submit).setOnClickListener(this);
         name.setText(restaurantName);
 
-        mRefFriends = database.getReference("users").child(profile).child("friends");
-        
         getUserFriendsValueEventListener();
         clickSelectReviewFriend();
         setToggleButton();
@@ -115,6 +111,7 @@ public class SelectedRestaurantActivity extends BaseActivity implements View.OnC
 
     /** First EventListener which gets all the friends of the user and calls addFriendInformation */
     public void getUserFriendsValueEventListener(){
+        DatabaseReference mRefFriends = database.getReference("users").child(profile).child("friends");
         mRefFriends.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
