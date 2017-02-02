@@ -24,6 +24,8 @@ import nl.mprog.friendsandfood.R;
 
 /**
  * Created by Tom Verburg on 12-1-2017.
+ * In this activity, the user is able to see his own reviews and read them by selecting them.
+ * A review can also be deleted by long pressing it.
  */
 
 public class YourReviewsActivity extends BaseActivity implements View.OnClickListener{
@@ -37,8 +39,6 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
     HashMap<String,HashMap> allReviewsHash = new HashMap<String, HashMap>();
     ValueEventListener listener;
 
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +46,8 @@ public class YourReviewsActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.restaurants_nav).setOnClickListener(this);
         findViewById(R.id.friends_nav).setOnClickListener(this);
 
+        //View
         listView = (ListView) findViewById(R.id.listViewReviews);
-        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, restaurants);
-        listView.setAdapter(adapter);
 
         setButtonColor();
         getOwnReviews();

@@ -46,10 +46,12 @@ public class WriteReviewActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_review);
 
+        //Intent
         Intent intent = getIntent();
         restaurantID = intent.getStringExtra("restaurantID");
         restaurantName = intent.getStringExtra("restaurantName");
 
+        //Views
         findViewById(R.id.btnSubmitReview).setOnClickListener(this);
         ratingBar = (RatingBar)findViewById(R.id.ratingBar);
         editText = (EditText) findViewById(R.id.edit_text_review);

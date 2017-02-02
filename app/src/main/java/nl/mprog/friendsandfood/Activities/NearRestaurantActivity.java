@@ -71,18 +71,15 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_near_restaurant);
 
+        //Views.
         findViewById(R.id.friends_nav).setOnClickListener(this);
         findViewById(R.id.own_reviews_nav).setOnClickListener(this);
-
-        //Sets the color of the navigation button of current activity.
-        ImageButton Nav = (ImageButton)findViewById(R.id.restaurants_nav);
-        int myColor = getResources().getColor(R.color.colorButtonPressed);
-        Nav.setBackgroundColor(myColor);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
         setMapFragment();
+        setColorNavigationButton();
     }
 
     /** Obtain the SupportMapFragment and get notified when the map is ready to be used. */
@@ -91,6 +88,13 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    /** Sets the color of the navigation button of current activity. */
+    public void setColorNavigationButton(){
+        ImageButton Nav = (ImageButton)findViewById(R.id.restaurants_nav);
+        int myColor = getResources().getColor(R.color.colorButtonPressed);
+        Nav.setBackgroundColor(myColor);
     }
 
     /**
