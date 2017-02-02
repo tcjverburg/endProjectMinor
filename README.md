@@ -40,8 +40,6 @@ source: https://github.com/hishamMuneer/JsonParsingDemo
 
 Copyright (c) 2015 Hisham, the MIT License.
 
-## Seperate parts of the application
-The first part of the application will be the login part using facebook. Following this, there will be a screen which shows a list of restaurants based on their distance from the user. The user will also then be able to navigate to several other screens. The user can select a restaurant which opens a new screen which shows information about the restaurant, ratings of friends, friends that are checked in and a small map with the location of the restaurant. In this screen, the user can toggle the checkin/checkout button and the user is prompted to leave a rating after they check out. Furthermore, the user can access an activity which shows their previous reviews and an activity which shows all their friends using the app.
 
 ## External Components
 - Google Maps Android API
