@@ -8,8 +8,15 @@
 ## Descriprion
 The application is designed to use your geo location to see what restaurants are near, and by logging in with facebook sees if any of your facebook friends have been there and left a positive review or are even checked in at that moment. By clicking on one of the markers, as the ones you see in the image, you are navigated to an activity which shows information about the restaurant, reviews left by friends, the option to check in and write a review.
 
+## Complete Functionality
+The first part of the application will be the login part using facebook. Following this, there will be a screen which shows an activity feed of what their friends have done recently. This is either written a review, or checked in in a restaurant. In the next activity there is a map with restaurants based on the location of the user. The user will also then be able to navigate to several other screens. The user can select a restaurant which opens a new screen which shows information about the restaurant, ratings of friends and friends who are checked in. In this screen, the user can toggle the checkin/checkout button and the user is prompted to leave a rating after they check out. Furthermore, the user can access an activity which shows their previous reviews and an activity which shows all their friends using the app.
+
 ## Technical Design
 ### Clearly describe the technical design: how is the functionality implemented in your code? This should be like your DESIGN.md but updated to reflect the final application. First, give a high level overview, which helps us navigate and understand the total of your code (which components are there?). Second, go into detail, and describe the modules/classes and how they relate.
+First of all, there are 8 activities. One for each screen and a BaseActivity which is the Superclass of all the other activities, with the exception of LoginActivity. This BaseActivity makes for less duplication of code and has a listener which directs the user back to the login screen, if the user is no longer logged in. There is 1 CustomArrayAdapter class for implementing a RatingBar, 1 AsyncTask class to do a HTTP request for the Google Places API Webservice, 1 Review class and 1 AppConfig  class which makes NearRestaurantActivity less messy. This is how the entire structure looks like:
+
+<img src="https://github.com/tcjverburg/endProjectMinor/blob/master/doc/new_design.png" width=100%>
+
 
 ## Challenges
 ### Clearly describe challenges that your have met during development. Document all important changes that your have made with regard to your design document (from the PROCESS.md). Here, we can see how much you have learned in the past month.
