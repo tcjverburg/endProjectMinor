@@ -92,7 +92,6 @@ public class NearRestaurantActivity extends BaseActivity implements OnMapReadyCa
     }
 
     /** Obtain the SupportMapFragment and get notified when the map is ready to be used. */
-
     public void setMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
